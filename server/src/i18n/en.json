@@ -1,0 +1,47 @@
+{
+  "startup.version": "backup-server {version} starting...",
+
+  "setup.new_config": "New config will be created: {path}",
+  "setup.device_id_hint": "device_id: (empty — auto-registered on first client connect)",
+  "setup.config_saved": "Config saved: {path}",
+  "setup.no_bundle_title": "First-time setup — TLS and config required",
+  "setup.no_bundle_body": "This server cannot start with the binary alone.",
+  "setup.no_bundle_step1": "  1. On the backup client: Connections → Add connection → enter this server's IP",
+  "setup.no_bundle_step2": "  2. The client generates config.toml and tls/ (server.crt + server.key)",
+  "setup.no_bundle_step3": "  3. Copy those files next to backup-server on this machine",
+  "setup.no_bundle_step4": "  4. Run ./backup-server again",
+  "setup.no_bundle_paths": "Expected files:",
+  "setup.no_bundle_cert": "    {cert}",
+  "setup.no_bundle_key": "    {key}",
+  "setup.no_bundle_config": "    {config}",
+
+  "setup.public_ip_prompt": "My external [IP:port]:",
+  "setup.public_ip_non_tty": "public_ip is local (127.0.0.1). Set your external IP in config.toml and restart.",
+  "setup.public_ip_saved": "public_ip set to {host} (saved in config.toml)",
+  "setup.public_ip_saved_port": "Server IP set to {host}:{port} (saved in config.toml)",
+  "setup.public_ip_required": "Required. Example: 91.201.40.187 or 91.201.40.187:8080",
+  "setup.public_ip_invalid_host": "Invalid host",
+  "setup.public_ip_invalid_port": "Invalid port: {port}",
+  "setup.public_ip_invalid": "Invalid value. Example: 91.201.40.187 or 91.201.40.187:8080",
+  "setup.public_ip_no_localhost": "Use your external IP, not 127.0.0.1 or localhost",
+  "setup.stdin_error": "Could not read input ({detail}). Try again or set public_ip in config.toml.",
+
+  "common.arrow_hint": "  -> {msg}",
+
+  "state.on": "on",
+  "state.off": "off",
+
+  "tls.missing_title": "TLS certificate and private key required",
+  "tls.missing_body": "HTTPS/WSS is mandatory. Place the files from the backup client deploy bundle:",
+  "tls.missing_cert": "  Certificate: {path}",
+  "tls.missing_key": "  Private key: {path}",
+  "tls.missing_how": "On the client: Connections → Add connection (or Renew server certificate) → copy tls/ and config.toml to this server.",
+  "tls.expired": "TLS certificate expired on {date} (CN: {cn}). Renew from the backup client and restart the server.",
+
+  "banner.server_ip": "Server IP: {addr} (https/wss)",
+  "banner.tls": "TLS: {cn} — valid {days} day(s) until {date}",
+  "banner.device_id_pending": "DEVICE-ID: (pending — first client connect)",
+  "banner.device_id": "DEVICE-ID: {prefix}...{suffix}",
+  "banner.debug": "Debug: {state} (debug=true — verbose logs + memory monitor >100 MB)",
+  "banner.status": "Status: ONLINE"
+}

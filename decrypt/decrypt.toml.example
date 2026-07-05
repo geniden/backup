@@ -1,0 +1,14 @@
+# Root folder with connection subfolders (client data/backups)
+path = "data/backups"
+
+# Updated automatically when you browse folders
+last_path = ""
+
+# Empty = decrypt next to .aes; or e.g. E:/decrypted
+output_path = ""
+
+# Per-connection encrypt passwords (name = subfolder under path, same as backup-client slug)
+# Add connections in the app menu — a random password is generated; copy to server config.toml
+[profiles]
+# production = "generated-or-your-passphrase"
+# staging = "another-server-password"

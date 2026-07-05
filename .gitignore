@@ -1,0 +1,23 @@
+# Rust
+**/target/
+
+# Secrets and local runtime data
+**/backup.db
+**/backup.db-*
+**/decrypt.toml
+**/data/
+**/tls/
+server/config.toml
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini
+
+# Local test logs (not for publication)
+tests/
+
+# Release staging (optional local folder)
+dist/

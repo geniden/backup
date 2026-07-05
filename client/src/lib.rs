@@ -1,0 +1,31 @@
+//! Backup client library: scheduler, TLS, SQLite, optional monitor.
+
+pub mod anomaly;
+pub mod bundle;
+pub mod ca;
+pub mod cron;
+pub mod db;
+pub mod device_id;
+pub mod dir_sync;
+pub mod download;
+pub mod format;
+pub mod i18n;
+pub mod logging;
+pub mod manager;
+pub mod menu;
+pub mod models;
+#[cfg(feature = "monitor")]
+pub mod monitor;
+pub mod paths;
+pub mod protocol;
+pub mod retention;
+pub mod run_tracker;
+pub mod runner;
+pub mod scheduler;
+pub mod session;
+pub mod submit_wait;
+pub mod task_params;
+pub mod tls;
+pub mod ui;
+pub mod validation;
+pub mod ws_inbound;

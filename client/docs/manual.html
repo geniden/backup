@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backup System — User Manual</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --border: #30363d;
+      --warn-bg: #2d2a1f;
+      --warn-border: #d29922;
+      --good-bg: #1a2e1f;
+      --good-border: #3fb950;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      margin: 0;
+      padding: 0;
+    }
+    .wrap {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 { font-size: 1.75rem; margin: 0 0 0.5rem; color: #fff; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; }
+    .translate-tip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+    nav.toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    nav.toc h2 { font-size: 1rem; margin: 0 0 0.75rem; color: var(--accent); }
+    nav.toc ol { margin: 0; padding-left: 1.25rem; }
+    nav.toc li { margin: 0.35rem 0; }
+    nav.toc a { color: var(--accent); text-decoration: none; }
+    nav.toc a:hover { text-decoration: underline; }
+    section { margin-bottom: 2.5rem; }
+    h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-top: 2rem;
+    }
+    h3 { font-size: 1.1rem; color: var(--accent); margin-top: 1.5rem; }
+    h4 { font-size: 1rem; margin-top: 1.25rem; }
+    p { margin: 0.75rem 0; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+    li { margin: 0.35rem 0; }
+    code, pre {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.88rem;
+    }
+    code {
+      background: var(--surface);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      line-height: 1.45;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--surface); color: var(--accent); }
+    .note {
+      background: var(--good-bg);
+      border-left: 4px solid var(--good-border);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+    .note-warn {
+      background: var(--warn-bg);
+      border-left-color: var(--warn-border);
+    }
+    .note strong { color: #fff; }
+    .platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0 0;
+    }
+    .platforms span {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.2rem 0.55rem;
+    }
+    .shield-feature {
+      background: linear-gradient(135deg, #1a2a3d 0%, #152238 50%, #1a2332 100%);
+      border: 1px solid #3d5a80;
+      border-radius: 12px;
+      padding: 1.25rem 1.35rem 1.35rem;
+      margin: 1.5rem 0 2rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    }
+    .shield-feature .shield-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .shield-feature .shield-icon {
+      flex-shrink: 0;
+      width: 2.75rem;
+      height: 2.75rem;
+      color: var(--accent2);
+    }
+    .shield-feature h2 {
+      font-size: 1.15rem;
+      margin: 0 0 0.35rem;
+      border: none;
+      padding: 0;
+      color: #fff;
+    }
+    .shield-feature .shield-tagline {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    .shield-feature .shield-problem {
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 3px solid var(--warn-border);
+      padding: 0.65rem 0.9rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.92rem;
+      color: #d4d4d8;
+      margin: 0 0 1rem;
+    }
+    .shield-levels {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: shield-level;
+    }
+    .shield-levels li {
+      counter-increment: shield-level;
+      position: relative;
+      padding: 0.55rem 0 0.55rem 2.5rem;
+      margin: 0;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.6);
+      font-size: 0.93rem;
+    }
+    .shield-levels li:last-child { border-bottom: none; }
+    .shield-levels li::before {
+      content: counter(shield-level);
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 1.65rem;
+      height: 1.65rem;
+      line-height: 1.65rem;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(63, 185, 80, 0.12);
+      border: 1px solid rgba(63, 185, 80, 0.35);
+      border-radius: 50%;
+    }
+    .shield-levels strong { color: #fff; }
+    .shield-levels .level-note {
+      display: block;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.15rem;
+    }
+    .shield-foot {
+      margin: 1rem 0 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    dl { margin: 0.75rem 0; }
+    dt { font-weight: 600; color: #fff; margin-top: 0.75rem; }
+    dd { margin: 0.25rem 0 0 0; color: var(--muted); }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Backup System — User Manual</h1>
+  <p class="subtitle">backup-client · backup-monitor · backup-server · backup-decrypt</p>
+  <div class="platforms" aria-label="Supported platforms">
+    <span>Windows</span>
+    <span>Linux</span>
+  </div>
+  <div class="translate-tip">
+    <strong>Tip:</strong> This manual is written in English. In Chrome, Edge, or Safari, right-click the page and choose
+    <em>Translate to [your language]</em> for a full translation. Commands, paths, and configuration keys stay readable in <code>monospace</code>.
+  </div>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#defense-layers">Layered protection (shield)</a></li>
+    <li><a href="#overview">Overview &amp; architecture</a></li>
+    <li><a href="#security">Security model</a></li>
+    <li><a href="#deployment">Client &amp; server deployment</a></li>
+    <li><a href="#hardware">Client hardware requirements</a></li>
+    <li><a href="#monitor">Backup monitor</a></li>
+    <li><a href="#faq">FAQ &amp; troubleshooting</a></li>
+    <li><a href="#config">Server config.toml reference</a></li>
+    <li><a href="#decrypt">Decrypting .aes backups</a></li>
+    <li><a href="#limitations">Limitations &amp; archive behaviour</a></li>
+    <li><a href="#license">License &amp; disclaimer</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<section id="overview">
+  <h2>1. Overview &amp; architecture</h2>
+
+  <div class="shield-feature" id="defense-layers">
+    <div class="shield-head">
+      <svg class="shield-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v5.7c0 4.52-3.07 8.86-7 9.93-3.93-1.07-7-5.41-7-9.93V6.3l7-3.12zM11 7v6l4.25 2.52.75-1.23-3.5-2.08V7h-2z"/>
+      </svg>
+      <div>
+        <h2>Layered backup protection</h2>
+        <p class="shield-tagline">What most backup tools skip — you choose how far to go.</p>
+      </div>
+    </div>
+    <p class="shield-problem">
+      <strong>The usual problem:</strong> one computer collects and stores all backups. If that machine is stolen,
+      copied, or compromised, <em>everything</em> is exposed — archives, database dumps, and often passwords stored
+      in the same place. This system is built so you can stack independent protections; each level is optional except
+      the baseline transport encryption.
+    </p>
+    <ol class="shield-levels">
+      <li>
+        <strong>TLS transport (baseline)</strong>
+        <span class="level-note">Private CA, certificate pinning — WSS + HTTPS. Mandatory for every connection; no plaintext backup channel in production.</span>
+      </li>
+      <li>
+        <strong>Server-side encryption (Encrypt mode)</strong>
+        <span class="level-note">Per-task <strong>Encrypt mode on</strong> in backup-client. The server encrypts each backup with AES-256-GCM before download; your storage receives <code>*.aes</code> files, not readable ZIP/TXT. Key stays in server <code>encrypt_password</code> only.</span>
+      </li>
+      <li>
+        <strong>Hardware-bound client (<code>device_id</code>)</strong>
+        <span class="level-note">Hybrid binding to your backup PC — fingerprint computed at runtime, not stored on disk. The server accepts only that machine; copying the client install to another PC does not grant access.</span>
+      </li>
+      <li>
+        <strong>Secrets on the server (Production mode)</strong>
+        <span class="level-note">Connection menu → <strong>Secrets mode: Production</strong>. After sync, DB passwords and similar fields live only in server <code>backup.db</code>; the client keeps task names and schedules without <code>db_pass</code>.</span>
+      </li>
+      <li>
+        <strong>Decrypt tool on external media</strong>
+        <span class="level-note"><code>backup-decrypt</code> + <code>decrypt.toml</code> on a USB stick — decryption password separate from the backup PC. Optional <code>output_path</code> writes plaintext to another drive (e.g. flash) without leaving decrypted files on the main disk.</span>
+      </li>
+    </ol>
+    <p class="shield-foot">
+      In practice three or four layers cover most threats; all five address the “single unprotected backup PC” scenario.
+      See <a href="#security">Security model</a> for details and <a href="#decrypt">Decrypting .aes backups</a> for level 5.
+    </p>
+  </div>
+
+  <p>
+    The Backup System is a distributed backup solution for your own VPS servers (<strong>Windows</strong> and <strong>Linux</strong>).
+    A central <strong>backup-client</strong> schedules tasks, connects to remote agents over an encrypted channel,
+    and stores downloaded archives locally. Each VPS runs a lightweight <strong>backup-server</strong> agent
+    that executes dumps, file archives, or shell scripts on demand.
+  </p>
+
+  <h3>Components</h3>
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Role</th><th>Where it runs</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>backup-client</code></td>
+        <td>Interactive setup, cron scheduler, WebSocket client, file download, SHA256 verification</td>
+        <td>Your workstation or a dedicated backup machine (Windows / Linux)</td>
+      </tr>
+      <tr>
+        <td><code>backup-monitor</code></td>
+        <td>Read-only TUI dashboard over <code>backup.db</code> (optional)</td>
+        <td>Same folder as <code>backup-client</code></td>
+      </tr>
+      <tr>
+        <td><code>backup-server</code></td>
+        <td>Task queue, dump/archive/shell execution, temporary file hosting</td>
+        <td>Each VPS you back up</td>
+      </tr>
+      <tr>
+        <td><code>backup-decrypt</code></td>
+        <td>Decrypt <code>*.aes</code> archives offline; stores encryption passwords separately from the backup PC (USB recommended)</td>
+        <td>USB stick or any machine — not on the scheduler host</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Supported task types</h3>
+  <ul>
+    <li><code>mysql_dump</code> / <code>mariadb_dump</code> — MySQL/MariaDB dump, ZIP archive</li>
+    <li><code>postgresql_dump</code> — PostgreSQL dump via <code>pg_dump</code>, ZIP archive</li>
+    <li><code>sqlite_dump</code> — SQLite file copy</li>
+    <li><code>files_archive</code> — ZIP archive of a directory (with ignore patterns)</li>
+    <li><code>dir_sync</code> — incremental ZIP of <em>new</em> files only (by mtime on server); one archive per run</li>
+    <li><code>shell</code> — Run an authorized script from <code>data/scripts/</code>, output saved as text (<code>backup_{slug}_shell_{YYYY-MM-DD}_{HHMMSS}.txt</code>)</li>
+  </ul>
+
+  <h4><code>dir_sync</code> (incremental media sync)</h4>
+  <p>
+    Use with a database dump task for sites that store uploads on disk (e.g. product images, PDFs, archives).
+    The server keeps a cursor <code>(sync_last, sync_last_path)</code> in <code>backup.db</code> and ships files in batches
+    (oldest by modification time first). Parameter <strong>Max batch MB</strong> (default <code>200</code>) limits uncompressed
+    data per ZIP; values above <code>500</code> are capped. Smaller batches are recommended on small VPS.
+    Schedule frequently (e.g. every 15 minutes) until the initial backfill finishes (<code>no_changes</code>), then switch to weekly for new uploads only.
+    If a file recorded in <code>sync_last_path</code> was deleted on the server, the next run continues from the cursor without error.
+    <strong>All file types</strong> are included (any extension) — not only images.
+    <strong>First sync window:</strong> <code>0</code> = all files in the folder; <code>N</code> = only files from the last N days on the first run only.
+    If nothing is pending after the cursor, the run completes with <code>no_changes</code> (no download).
+    Archives are stored as ZIP on the client (no auto-unzip). Encryption is not available for <code>dir_sync</code>.
+    Uses the built-in Rust ZIP writer — the system <code>zip</code> package is <em>not</em> required for <code>dir_sync</code>.
+  </p>
+  <p><strong>Reset synchronization (start fresh)</strong></p>
+  <p>
+    In the task menu for a <code>dir_sync</code> task, the line <strong>Last received file: …</strong> shows the name of the
+    most recent archive (from run history or from files on disk), for example
+    <code>backup_orlovka_sync_2026-07-04_105014.zip</code>. Select it to confirm
+    <strong>Reset synchronization (start fresh)?</strong>
+  </p>
+  <ul>
+    <li><strong>Server</strong> — the incremental cursor in <code>backup.db</code> (<code>task_sync_state</code>) and any pending batches are cleared. The next run behaves like a new backfill (respecting <strong>First sync window</strong>).</li>
+    <li><strong>Client</strong> — run history for that task in <code>backup.db</code> is cleared (<code>task_runs</code>, <code>last_run</code>).</li>
+    <li><strong>Local ZIP files are not deleted</strong> — existing <code>backup_*_sync_*</code> archives stay in <code>data/backups/&lt;slug&gt;/</code>. After reset, new runs create <em>new</em> archives with new timestamps in the filename; you may have overlapping content if you kept old ZIPs.</li>
+  </ul>
+  <p>
+    Use this when you accidentally deleted one or more <code>backup_*_sync_*</code> archives locally and need the server to
+    ship those files again, or when you want to re-run the initial backfill without recreating the task.
+    Requires a live connection to the VPS (the client sends <code>reset_dir_sync</code> over WSS).
+  </p>
+
+  <h4><code>files_archive</code> (full project / tree snapshot)</h4>
+  <p>
+    One ZIP of the entire tree each run (with <code>ignore</code> patterns for <code>node_modules</code>, etc.).
+  There is <strong>no batch limit</strong> — typical app trees (~100–300&nbsp;MB with ignores) fit a single monthly run.
+    Use <code>dir_sync</code> instead when uploads or media grow to many gigabytes and need incremental batches.
+  </p>
+
+  <h3>Encrypt mode (per task)</h3>
+  <p>
+    In the task menu: <strong>Encrypt mode (on/off)</strong>. When <strong>on</strong>, the server encrypts the backup
+    with AES-256-GCM before download (<code>name.zip.aes</code> or <code>name.txt.aes</code>).
+    The server must have <code>encrypt_password</code> in <code>config.toml</code> (same value in <code>backup-decrypt</code> on USB).
+    If Encrypt mode is on but the key is missing, the server skips the run and logs a warning.
+    New tasks default to Encrypt mode <strong>off</strong>. <code>dir_sync</code> does not support encryption.
+  </p>
+
+  <h3>Backup retention (local disk)</h3>
+  <p>
+    Per connection: menu → <strong>Retention</strong>. Options: <strong>Never</strong> (0), 7, 14, 30, or 60 days.
+    Old backup files under <code>data/backups/&lt;slug&gt;/</code> are removed automatically when:
+  </p>
+  <ul>
+    <li>the connection is <strong>enabled</strong>;</li>
+    <li>a backup task completed successfully (trigger);</li>
+    <li>at most <strong>once per 24 hours</strong> per connection (cooldown);</li>
+    <li>the <strong>latest backup per task</strong> is always kept, even if older than the retention period;</li>
+    <li><strong><code>dir_sync</code> archives are never deleted</strong> — incremental batches form a required history; retention applies only to other task types.</li>
+  </ul>
+  <p>Disabled connections never run retention — local files are not touched.</p>
+
+  <h3>Typical data flow</h3>
+  <ol>
+    <li>Scheduler fires a task by cron expression.</li>
+    <li>Client opens a <strong>WebSocket session</strong> to the server if needed (see below), syncs task definitions, and sends <code>run_task</code> with <code>def_id</code> over <strong>WSS</strong>.</li>
+    <li>Server queues the job, executes it, and responds with <code>task_completed</code> plus an <strong>HTTPS</strong> download URL.</li>
+    <li>Client downloads the file, verifies <strong>SHA256</strong>, records the run in <code>backup.db</code>.</li>
+    <li>Client sends <code>check_download</code>; server deletes the temporary file.</li>
+    <li>When no further tasks are due within <strong>10 minutes</strong>, the client closes the WebSocket (session sleeps until the next cron tick).</li>
+  </ol>
+
+  <h3>WebSocket sessions (scheduler)</h3>
+  <p>
+    The scheduler does <strong>not</strong> keep a permanent WebSocket open all day. Each enabled connection
+    (each VPS) uses a short <strong>backup session</strong>:
+  </p>
+  <ul>
+    <li><strong>Wake</strong> — shortly before a cron run, the client connects (TLS + <code>device_id</code> auth + <code>sync_tasks</code>).</li>
+    <li><strong>Work</strong> — tasks run in order; downloads and <code>check_download</code> use the same session.</li>
+    <li><strong>Stay open</strong> — if another task on the same server is scheduled within the next <strong>10 minutes</strong>, the link stays up (e.g. staggered <code>0, 5, 10, 15 …</code> minute crons in one evening window).</li>
+    <li><strong>Sleep</strong> — when all pending work is finished and the next cron is more than 10 minutes away, the client closes WSS. No heartbeat traffic while idle.</li>
+  </ul>
+  <p>
+    Many connections (many VPS) are independent: each has its own schedule, session, and server queue.
+    One physical server address (<code>IP:port</code>) still shares a single WSS link on the client (deduplicated by URL).
+  </p>
+  <p>
+    If the link drops <strong>while a task is still in progress</strong>, the client runs a separate
+    <strong>recovery</strong> loop (reconnect every few seconds, wait for completion, re-submit if needed).
+    That is different from the three submission retries used when the queue cannot be reached at cron time.
+    If the server reports a real task error (missing folder, dump failed), the task is logged as failed and skipped — recovery is not used.
+  </p>
+
+  <h3>Local files (client)</h3>
+  <dl>
+    <dt><code>backup.db</code></dt>
+    <dd>SQLite database: connections, tasks, run history (WAL mode).</dd>
+    <dt><code>data/ca/</code></dt>
+    <dd>Private root CA and per-server deploy bundles.</dd>
+    <dt><code>data/backups/{slug}/</code></dt>
+    <dd>Downloaded backup files, grouped by connection. Default root; change in main menu → <strong>Settings</strong> → <strong>Backups download folder</strong> (absolute path, e.g. USB or mounted network drive). Empty input or <strong>Reset download folder to default</strong> restores <code>{client}/data/backups</code>. Existing files are not moved automatically. <strong>ASCII paths</strong> (A–Z, digits) are recommended for maximum compatibility; Unicode paths (e.g. <code>/home/张三/备份/</code>) are supported on Windows and Linux via the OS filesystem APIs — the client shows a warning but does not block them.</dd>
+    <dt><code>data/backup.log</code></dt>
+    <dd>Scheduler log file.</dd>
+  </dl>
+</section>
+
+<!-- ============================================================ -->
+<section id="security">
+  <h2>2. Security model</h2>
+
+  <p>
+    The system is designed for operators who manage their own infrastructure. It follows established
+    practices for private PKI, encrypted transport, and least exposure of secrets on remote servers.
+  </p>
+
+  <h3>What the application provides</h3>
+  <ul>
+    <li><strong>Private TLS (WSS + HTTPS)</strong> — No public CA or domain name required. Each server gets a certificate signed by your client-side root CA (~10 years validity). Server certificates are issued for ~730 days and can be renewed from the client menu.</li>
+    <li><strong>Certificate pinning</strong> — The client stores the server certificate fingerprint and accepts only that certificate for the connection.</li>
+    <li><strong>Device ID authentication</strong> — The client computes a hardware fingerprint (<code>device_id</code>) at runtime and sends it over TLS. The server registers it on first connect and rejects other machines. Nothing is stored on the client disk for this.</li>
+    <li><strong>Test vs Production secrets mode</strong> — Per connection, you choose where database passwords live:
+      <ul>
+        <li><strong>Test</strong> — full task parameters (including <code>db_pass</code>) stay in client <code>backup.db</code> at all times. Use while setting up tasks.</li>
+        <li><strong>Production</strong> — after each successful <code>sync_tasks</code>, the server stores full tasks in <code>backup.db</code> on the VPS; the client removes <code>db_pass</code> from <code>mysql_dump</code> / <code>postgresql_dump</code> tasks locally. Scheduled runs use only <code>def_id</code>; the server runs dumps with passwords from its database.</li>
+      </ul>
+      Toggle in the connection menu: <strong>Secrets mode: Test / Production</strong>. To change a password in Production: edit the task on the client, enter the new password, reconnect (sync updates the server). An empty password on the client never overwrites the server copy.</li>
+    <li><strong>Download integrity</strong> — Every completed backup is verified with SHA256 before being marked successful.</li>
+    <li><strong>Shell script sandboxing</strong> — Scripts run only from <code>data/scripts/</code>; path traversal in script names is rejected.</li>
+    <li><strong>Single active client per server</strong> — Only one WebSocket session per backup-server agent at a time. A new connect from the same client replaces the previous session (reconnect / recovery). On the client, you can register only <strong>one connection per unique server address</strong> (<code>IP:port</code>); a duplicate address is blocked when adding or editing a connection.</li>
+    <li><strong>Temp file cleanup</strong> — Archives are removed from the server after the client confirms download.</li>
+  </ul>
+
+  <h3>Administrator responsibilities</h3>
+
+  <div class="note">
+    <strong>Root CA on the client (<code>data/ca/root.crt</code> and <code>data/ca/root.key</code>)</strong>
+    <p style="margin:0.5rem 0 0">
+      The private root CA is the trust anchor for all your backup servers. The application creates and uses it automatically,
+      but <strong>protecting the root key is entirely your responsibility</strong> as the system administrator.
+      Store the client installation on a machine you control, restrict filesystem access, and include
+      <code>root.key</code> in your backup and disaster-recovery procedures. If the root key is compromised,
+      recreate the root CA from the client menu and renew every server certificate.
+    </p>
+  </div>
+
+  <div class="note">
+    <strong>Server <code>config.toml</code> and TLS private key</strong>
+    <p style="margin:0.5rem 0 0">
+      Each server agent stores <code>device_id</code> in <code>config.toml</code> (empty until your client connects).
+      Protect the file with standard server hardening — same as for TLS keys and service credentials.
+    </p>
+    <p style="margin:0.75rem 0 0"><strong>Recommended layout on Linux:</strong></p>
+    <ul style="margin:0.5rem 0 0">
+      <li>Install under <code>/opt/backup-server/</code> (or similar dedicated path), owned by a non-web user such as <code>root</code> or a dedicated <code>backup</code> account.</li>
+      <li>Set restrictive permissions: <code>chmod 600 tls/server.key config.toml</code>.</li>
+      <li>Do <strong>not</strong> place the agent under <code>/var/www</code> or any path served by your web stack — the backup port is for your client only, not for public website traffic.</li>
+      <li>Use a firewall so only your backup client’s IP (or VPN) can reach the server port (default <code>8080</code>).</li>
+    </ul>
+    <p style="margin:0.75rem 0 0">
+      With TLS, pinned certificates, firewall rules, and proper file permissions, the server agent is suitable
+      for production use on private VPS instances.
+    </p>
+  </div>
+
+  <h3>Client machine</h3>
+  <ul>
+    <li>In <strong>Test</strong> mode, protect <code>backup.db</code> — it contains database passwords.</li>
+    <li>In <strong>Production</strong> mode, dump passwords are removed from the client after sync; protect server <code>backup.db</code> on the VPS instead.</li>
+    <li>Protect <code>data/ca/root.key</code> — see above.</li>
+    <li>Run the scheduler on a stable host (office server, management VM, or your PC with UPS).</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="deployment">
+  <h2>3. Client &amp; server deployment</h2>
+
+  <h3>Step 1 — Install the client</h3>
+  <p>Copy to one folder (examples):</p>
+  <pre>Windows:  C:\backup-client\backup-client.exe  (+ backup-monitor.exe optional)
+Linux:    /opt/backup-client/backup-client      (+ backup-monitor optional)</pre>
+  <p>First launch creates <code>backup.db</code> and, if needed, the root CA under <code>data/ca/</code>.</p>
+  <p>UI language: main menu → <strong>Settings</strong> → <strong>Language</strong>. Built-in locales: English, Russian, German, French, Chinese (Simplified, zh-CN). Server console messages follow <code>BACKUP_LANG</code> or <code>LANG</code> (same set).</p>
+
+  <h3>Step 2 — Add a connection</h3>
+  <ol>
+    <li>Run <code>backup-client</code> (interactive menu).</li>
+    <li>Choose <strong>Add connection</strong>.</li>
+    <li>Enter a latin <strong>slug</strong> (e.g. <code>production</code>) and server address <code>IP:port</code> (default port 8080).</li>
+    <li>The client generates a server certificate signed by your root CA and prepares a deploy folder:
+      <code>data/ca/{slug}/</code></li>
+  </ol>
+
+  <h3>Deploy folder contents</h3>
+  <p>The client writes <code>data/ca/{slug}/</code> on your PC. Copy <strong>the contents</strong> of that folder to the VPS
+    (not the slug folder itself). The Linux <code>backup-server</code> binary is <strong>not</strong> inside the bundle — build or copy it separately.</p>
+  <table>
+    <thead><tr><th>On VPS (same directory)</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td><code>backup-server</code></td><td>Linux musl binary (WSL build or release artifact)</td></tr>
+      <tr><td><code>config.toml</code></td><td>From bundle</td></tr>
+      <tr><td><code>tls/server.crt</code>, <code>tls/server.key</code></td><td>From bundle</td></tr>
+      <tr><td><code>service.sh</code></td><td>From bundle — installs systemd unit</td></tr>
+      <tr><td><code>README.txt</code></td><td>Quick notes for this connection</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Step 3 — Deploy to the VPS</h3>
+  <pre># Copy bundle files + backup-server binary into one directory, e.g. /opt/backup-server/
+scp data/ca/production/config.toml data/ca/production/service.sh user@vps:/opt/backup-server/
+scp -r data/ca/production/tls user@vps:/opt/backup-server/
+scp backup-server-linux user@vps:/opt/backup-server/backup-server
+
+ssh user@vps
+cd /opt/backup-server
+chmod +x backup-server service.sh
+chmod 600 tls/server.key
+
+# Optional: test interactively (needs config + tls; shows first-run hints if files missing)
+./backup-server
+
+# Install and start as service (sets ownership, verifies "Listening on https://" in journal)
+sudo ./service.sh</pre>
+  <p>
+    <code>service.sh</code> requires <code>config.toml</code> and <code>tls/</code>, runs
+    <code>chown</code> on the install directory for the service user (<code>SUDO_USER</code> when you use <code>sudo</code>),
+    enables systemd, and fails with logs if the server does not start within ~20 seconds.
+  </p>
+
+  <h3>Step 4 — Add tasks, choose secrets mode, start scheduler</h3>
+  <ol>
+    <li>In the client menu: open the connection → <strong>Add task</strong>.</li>
+    <li>Configure task type, parameters, and cron schedule.</li>
+    <li>While testing, keep <strong>Secrets mode: Test</strong> (default).</li>
+    <li>When ready for production: connection menu → <strong>Secrets mode: Production</strong>, then <strong>Test connection</strong> once to sync and clear local DB passwords.</li>
+    <li>From the main menu: <strong>Start scheduler</strong> (or run <code>backup-client serve</code>).</li>
+  </ol>
+
+  <p>See also <a href="#overview">Backup retention</a> in the overview.</p>
+
+  <h3>Secrets mode (Test / Production)</h3>
+  <table>
+    <thead><tr><th>Mode</th><th>Client <code>backup.db</code></th><th>Server <code>backup.db</code></th></tr></thead>
+    <tbody>
+      <tr><td><strong>Test</strong></td><td>Full tasks with <code>db_pass</code></td><td>Updated on sync; passwords merged from client</td></tr>
+      <tr><td><strong>Production</strong></td><td><code>db_pass</code> cleared after each sync for dump tasks</td><td>Authoritative copy for scheduled runs</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Changing a password in Production: edit the task on the client, enter the new password, reconnect.
+    Sync sends the new value to the server. If the client password field is empty, sync does <em>not</em> overwrite the server password.
+  </p>
+
+  <h3>One connection = one server = one certificate</h3>
+  <p>
+    Each connection has its own TLS certificate and <code>device_id</code> binding on the server.
+    If you manage 15 VPS servers, you create 15 connections — each with a unique slug and certificate.
+  </p>
+  <div class="note">
+    <strong>One server address per connection (by design)</strong>
+    <p style="margin:0.5rem 0 0">
+      The client allows only <strong>one connection per unique <code>IP:port</code></strong>. Adding a second connection
+      to the same server address is rejected. This avoids duplicate certificates, conflicting slugs, and ambiguous deploy folders.
+    </p>
+    <p style="margin:0.75rem 0 0">
+      On each VPS, <strong>backup-server</strong> accepts only <strong>one active WebSocket client</strong> at a time.
+      The scheduler opens a session when tasks need to run and closes it after idle (see
+      <a href="#overview">WebSocket sessions</a>). A manual <strong>Test connection</strong> while the scheduler
+      is connected to the same server may briefly replace that session; avoid overlapping tests during backup windows.
+    </p>
+  </div>
+
+  <h3>Certificate renewal (~2 years)</h3>
+  <p>
+    Server certificates are valid for about <strong>730 days</strong>. Before expiry:
+  </p>
+  <ol>
+    <li>Client menu → connection → <strong>Renew server certificate</strong>.</li>
+    <li>Copy the updated <code>data/ca/{slug}/</code> folder to the VPS (new cert; <code>device_id</code> reset in bundle).</li>
+    <li>Restart <code>backup-server</code>: <code>sudo systemctl restart backup-server</code>.</li>
+    <li>The client updates the stored fingerprint automatically; <code>device_id</code> re-registers on first connect.</li>
+  </ol>
+
+  <div class="note note-warn">
+    <strong>Recreate root CA</strong> (main menu) invalidates <em>all</em> server certificates.
+    After recreating the root CA you must renew the certificate for <em>every</em> connection.
+  </div>
+
+  <h3>Linux systemd example (client scheduler)</h3>
+  <pre>[Unit]
+Description=Backup Client Scheduler
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/backup-client
+ExecStart=/opt/backup-client/backup-client serve
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target</pre>
+
+  <h3>CLI quick reference</h3>
+  <pre>backup-client                    # interactive menu
+backup-client serve              # production scheduler
+backup-client connection-list
+backup-client connection-test &lt;slug&gt;
+backup-client task-list
+backup-client --help</pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="hardware">
+  <h2>4. Client hardware requirements</h2>
+
+  <p>
+    This section applies to the machine that runs <strong>backup-client</strong> (interactive menu or
+    <code>backup-client serve</code>) and stores downloaded backups under <code>data/backups/</code> or your
+    custom folder. Heavy work (database dumps, ZIP creation, shell scripts) runs on each <strong>VPS</strong>;
+    the client opens WebSocket sessions on demand and downloads finished archives over HTTPS.
+  </p>
+
+  <h3>Recommended configurations</h3>
+  <table>
+    <thead>
+      <tr><th>Profile</th><th>CPU</th><th>RAM</th><th>Storage</th><th>Typical use</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Minimum</strong></td>
+        <td>2 cores / 4 threads</td>
+        <td>8&nbsp;GB</td>
+        <td>SSD, free space ≥ 2× your largest expected backup set</td>
+        <td>Up to ~10 VPS, small DB dumps and archives (tens of MB), schedules staggered across connections</td>
+      </tr>
+      <tr>
+        <td><strong>Comfortable (recommended)</strong></td>
+        <td>2–4 cores</td>
+        <td>16&nbsp;GB</td>
+        <td>SSD (dedicated partition or disk for backups)</td>
+        <td>Up to ~30 VPS, mixed task types, occasional overlapping downloads</td>
+      </tr>
+      <tr>
+        <td><strong>High load / many large archives</strong></td>
+        <td>4+ cores</td>
+        <td>32&nbsp;GB or more</td>
+        <td>Fast SSD or NAS with stable write speed</td>
+        <td>Many VPS, large ZIPs, or several big downloads finishing at the same time</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>What actually uses CPU and RAM on the client</h3>
+  <ul>
+    <li><strong>Idle scheduler</strong> — between cron windows the client keeps <strong>no</strong> WebSocket open (sessions sleep). CPU and network use while waiting for the next task are negligible, even with many VPS connections registered.</li>
+    <li><strong>Peak load</strong> — downloading backups over HTTPS, verifying SHA256, and writing files to disk. TLS and hashing are moderate; <strong>RAM and disk throughput</strong> matter more than raw CPU during bursts.</li>
+    <li><strong>Per server</strong> — the agent runs <strong>at most one backup job at a time</strong> for that VPS. Different servers can finish jobs around the same time, so the client may download from several connections in parallel.</li>
+  </ul>
+
+  <h3>RAM planning (downloads)</h3>
+  <p>
+    Each completed backup is downloaded into memory before it is written to disk (then verified with SHA256).
+    Rough peak memory:
+  </p>
+  <pre>RAM_peak ≈ OS + backup-client + (parallel_downloads × largest_file_size) + safety margin</pre>
+  <p><strong>Example (comfortable):</strong> 5 connections finish at once with archives of ~400&nbsp;MB each →
+    ~2&nbsp;GB for download buffers, plus ~2–4&nbsp;GB for the operating system and GUI → about <strong>8–10&nbsp;GB</strong> peak.
+    <strong>16&nbsp;GB RAM</strong> is usually comfortable for this pattern.</p>
+  <div class="note note-warn">
+    <strong>Critical worst case</strong>
+    <p style="margin:0.5rem 0 0">
+      If all <strong>30</strong> VPS finish at the same moment with archives of <strong>1&nbsp;GB</strong> each, the client could
+      need on the order of <strong>~30&nbsp;GB</strong> just for download buffers (before OS overhead). That scenario is unlikely
+      if cron schedules are spread out, but it explains why you should <strong>not align every task on every connection to the same minute</strong>.
+    </p>
+  </div>
+
+  <h3>Stagger schedules — between servers and within one VPS</h3>
+  <p>
+    You do <strong>not</strong> need (and should not try) to run all backups at exactly the same time.
+  </p>
+
+  <h4>Many connections (many VPS)</h4>
+  <p>Spread cron times across connections — for example:</p>
+  <ul>
+    <li>Server A: <code>0 8 * * *</code> (08:00)</li>
+    <li>Server B: <code>15 8 * * *</code> (08:15)</li>
+    <li>Server C: <code>30 8 * * *</code> (08:30)</li>
+  </ul>
+  <p>This keeps client RAM, disk writes, and your uplink predictable.</p>
+
+  <h4>Many tasks on one connection (one VPS)</h4>
+  <p>
+    On a single server, tasks run <strong>one at a time</strong> on the agent (queued on the server).
+    They are not lost when queued, but if every task uses the same minute you get a long serial backlog,
+    higher VPS load, and longer waits before the last site finishes.
+  </p>
+  <p><strong>Recommended:</strong> offset the <em>minute</em> field by 5–15 minutes per task, same hour:</p>
+  <pre># Avoid — all at once (works, but heavy):
+0 22 * * *   site-a dir_sync
+0 22 * * *   site-b dir_sync
+0 22 * * *   site-c mysql_dump
+
+# Better — stagger minutes:
+0 22 * * *   site-a dir_sync
+5 22 * * *   site-b dir_sync
+10 22 * * *  site-c dir_sync
+15 22 * * *  site-d dir_sync
+20 22 * * *  site-e mysql_dump</pre>
+  <p>
+    For initial bulk sync you may use shorter intervals (e.g. <code>*/5</code>) temporarily; switch to staggered
+    nightly times once caught up. At each cron tick the client opens a session if needed, waits for
+    <code>task_queued</code>, and retries submission up to 3 times (60&nbsp;s apart) if the server cannot be reached;
+    after that it logs <strong>SKIPPED this run</strong> until the next cron tick.
+    If the link drops <strong>after</strong> the task was queued, recovery reconnects and may re-submit automatically (see
+    <a href="#overview">WebSocket sessions</a>).
+  </p>
+
+  <h3>Storage (SSD) and operating system</h3>
+  <ul>
+    <li><strong>SSD strongly recommended</strong> for the backup root — faster writes during download bursts and smoother retention cleanup.</li>
+    <li>Keep at least <strong>15–20% free space</strong> on the backup volume; retention deletes old files but does not replace off-site copies.</li>
+    <li><strong>Windows 10/11</strong> and <strong>Ubuntu LTS</strong> (desktop or Server) are both supported. For a dedicated backup PC:
+      <ul>
+        <li><strong>Ubuntu Server</strong> (no GUI) — slightly lower RAM use and smaller attack surface.</li>
+        <li><strong>Windows with GUI</strong> — fine if you already use it; budget an extra ~2–4&nbsp;GB RAM for the desktop.</li>
+      </ul>
+    </li>
+    <li>Security depends more on patching, firewall, and who can access the backup folder than on the choice between Windows and Linux.</li>
+  </ul>
+
+  <p>See also <a href="#security">Security model</a> (client machine) and <a href="#limitations">Limitations</a> (server-side archive RAM limits).</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="monitor">
+  <h2>5. Backup monitor</h2>
+
+  <p>
+    <code>backup-monitor</code> is a separate read-only terminal dashboard. It does <strong>not</strong>
+    run backups and is not required for production — use it when you want a live status view while the scheduler runs.
+  </p>
+
+  <h3>Requirements</h3>
+  <ul>
+    <li>Must be in the <strong>same folder</strong> as <code>backup.db</code>, or pass <code>--db</code> explicitly.</li>
+    <li>Opens the database in <strong>read-only WAL mode</strong> — safe alongside a running scheduler.</li>
+  </ul>
+
+  <h3>Launch</h3>
+  <pre>Windows:  .\backup-monitor.exe
+Linux:    ./backup-monitor
+
+Custom database path:
+  backup-monitor --db /opt/backup-client/backup.db</pre>
+
+  <h3>Keyboard</h3>
+  <table>
+    <thead><tr><th>Key</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><code>q</code> / <code>Esc</code></td><td>Quit</td></tr>
+      <tr><td><code>r</code></td><td>Refresh data immediately</td></tr>
+    </tbody>
+  </table>
+  <p>Data also refreshes automatically about every 10 seconds.</p>
+
+  <h3>Columns</h3>
+  <table>
+    <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>CONNECTION / TASK</td><td>Server address + slug; indented lines are tasks</td></tr>
+      <tr><td>ACTIVITY / TYPE</td><td>Connection: RECENT / IDLE / NO RUNS; task: task type</td></tr>
+      <tr><td>OK / SCHEDULE</td><td>Connection: successful tasks count; task: cron schedule</td></tr>
+      <tr><td>LAST</td><td><code>OK ✓</code> — download completed and SHA256 matched; <code>pass</code> — <code>dir_sync</code> run with no new files (SIZE shows last downloaded archive if any)</td></tr>
+      <tr><td>SIZE</td><td>Last successful file size</td></tr>
+      <tr><td>ANOMALY</td><td>Archive warnings: <code>tiny file</code>, <code>size drop</code> (not used for shell tasks)</td></tr>
+      <tr><td>TIME</td><td>Local date and time of last run (<code>YYYY-MM-DD HH:MM</code>, 4-digit year)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Activity labels</h3>
+  <ul>
+    <li><strong>RECENT</strong> — at least one task ran successfully in the last ~30 minutes.</li>
+    <li><strong>IDLE</strong> — last run was longer ago.</li>
+    <li><strong>NO RUNS</strong> — no successful run recorded yet (scheduler not started or task never completed).</li>
+  </ul>
+
+  <h3>Typical setup (development)</h3>
+  <pre>Terminal 1:  backup-client serve
+Terminal 2:  backup-monitor
+Terminal 3:  tail -f data/backup.log</pre>
+</section>
+
+<!-- ============================================================ -->
+<section id="faq">
+  <h2>6. FAQ &amp; troubleshooting</h2>
+
+  <h3>Scheduler / connection</h3>
+
+  <h4>Monitor shows dashes (—) for a task</h4>
+  <p>
+    No successful run is recorded yet. Ensure <code>backup-client serve</code> is running,
+    the connection is enabled, and the task has completed at least once with a successful download.
+  </p>
+
+  <h4>Task queue on one connection</h4>
+  <p>
+    When several tasks fire close together, the server accepts each <code>run_task</code> into a FIFO queue and runs
+    one job at a time. You may see <code>position N in server queue</code> in client logs — that is normal.
+    Spread cron minutes (see <a href="#hardware">hardware / scheduling</a>) to shorten the queue and reduce peak load.
+  </p>
+
+  <h4><code>Connection busy</code> (legacy servers)</h4>
+  <p>
+    Current servers always queue <code>run_task</code> requests (one active run per connection).
+    The client waits for <code>task_queued</code> and retries submission up to 3 times (60s apart)
+    before skipping a cron tick and logging an error.
+  </p>
+
+  <h4>WebSocket session sleeps between tasks</h4>
+  <p>
+    Normal behaviour: after backups finish, if the next cron for that server is more than <strong>10 minutes</strong> away,
+    the log may show the session closing and <em>Scheduler idle — WebSocket opens before the next scheduled task</em>
+    on startup. Before each run the client connects again (auth + sync). Tasks within 10 minutes share one session.
+  </p>
+
+  <h4>Link lost during a backup</h4>
+  <p>
+    If WSS drops while a task is still pending (dump running or download not finished), the client starts
+    <strong>recovery</strong>: reconnect (every few seconds), wait up to ~90&nbsp;s for the server to finish,
+    then re-submit the task if needed. Success is logged as <em>Pending backup task(s) completed after reconnect</em>.
+    If recovery exhausts its attempts, the log reports that the task was <strong>not</strong> completed in that cron window.
+  </p>
+
+  <h4>Task failed on the server (broken task)</h4>
+  <p>
+    Missing source path, dump error, or script failure: the server sends <code>task_failed</code>.
+    The client logs that the task is <strong>broken and skipped</strong> (with the server error) and moves on.
+    Recovery is not used — fix the task configuration or server paths and wait for the next cron.
+  </p>
+
+  <h4><code>No active WebSocket connection</code> (legacy)</h4>
+  <p>
+    Older clients required a permanent connection before cron could run. Current scheduler opens WSS automatically
+    before each task. If you still see this message, update the client binary. Otherwise check: scheduler not running,
+    server down, firewall, or TLS/fingerprint mismatch — test with <code>backup-client connection-test &lt;slug&gt;</code>.
+  </p>
+
+  <h4>TLS / certificate errors</h4>
+  <ul>
+    <li>Certificate expired — renew from the client menu and redeploy to the VPS.</li>
+    <li>Wrong fingerprint — connection points to a different server or cert was replaced manually.</li>
+    <li>Root CA recreated — renew every server certificate.</li>
+  </ul>
+
+  <h3>Server-side</h3>
+
+  <h4><code>mysqldump</code> / <code>pg_dump</code> not found</h4>
+  <p>Install the database client tools or set paths in <code>config.toml</code>
+  (<code>mysqldump_path</code>, <code>pg_dump_path</code>).</p>
+  <p>On <strong>Windows</strong>, set the full path in <code>config.toml</code>, e.g.
+  <code>mysqldump_path = "D:/mysql/bin/mysqldump.exe"</code>
+  (backslashes in double quotes are auto-normalized on load).</p>
+
+  <h4>Running backup-server on Windows</h4>
+  <p>Place <code>config.toml</code> and <code>tls/</code> next to <code>backup-server.exe</code>
+  (or run from the server directory with <code>cargo run</code>). TLS is mandatory.
+  Shell tasks should use <code>.bat</code> / <code>.cmd</code> scripts, not <code>.sh</code>.</p>
+
+  <h4>Enable verbose server logging (debug mode)</h4>
+  <p>Edit <code>config.toml</code> on the server:</p>
+  <pre>debug = true</pre>
+  <p>Restart the service. With <code>debug = true</code> you get detailed debug logs and memory usage reporting when the process exceeds ~100 MB.</p>
+  <p>Return to normal operation: <code>debug = false</code> and restart.</p>
+
+  <h4>How do I remove database passwords from the client?</h4>
+  <p>
+    Open the connection → <strong>Secrets mode: Production</strong>, confirm, then run
+    <strong>Test connection</strong> (or start the scheduler). After a successful sync,
+    <code>db_pass</code> is cleared locally for MySQL/MariaDB/PostgreSQL dump tasks.
+    Full tasks remain on the server in <code>backup.db</code>.
+  </p>
+
+  <h4>How do I change a DB password in Production mode?</h4>
+  <p>
+    Edit the task on the client, enter the new password, save, then reconnect.
+    The next sync sends the new password to the server. Leaving the password empty on the client
+    does not overwrite the server copy.
+  </p>
+
+  <h3>Client</h3>
+
+  <h4>Where are downloaded backups?</h4>
+  <p><code>data/backups/{connection-slug}/</code></p>
+
+  <h4>One database for all connections?</h4>
+  <p>Yes — one <code>backup.db</code> per client installation manages all connections and tasks.</p>
+
+  <h4>Is monitor required?</h4>
+  <p>No. <code>backup-client serve</code> and <code>data/backup.log</code> are sufficient for production.</p>
+
+  <h4>Cron schedule format</h4>
+  <p>Standard 5-field cron (minute hour day month weekday). Examples:</p>
+  <ul>
+    <li><code>0 */6 * * *</code> — every 6 hours</li>
+    <li><code>0 2 * * *</code> — daily at 02:00</li>
+    <li><code>*/5 * * * *</code> — every 5 minutes (testing)</li>
+    <li><code>*/60 * * * *</code> or <code>0 * * * *</code> — every hour (shorthand <code>*/60</code> is accepted)</li>
+    <li><code>*/120 * * * *</code> or <code>0 */2 * * *</code> — every 2 hours</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="config">
+  <h2>7. Server config.toml reference</h2>
+
+  <p>
+    Created automatically on first server start (or copied from the client deploy bundle).
+    After editing, restart <code>backup-server</code>.
+  </p>
+
+  <pre># Example config.toml (generated by backup-client for each connection)
+
+device_id = ""                      # empty until first client connect
+public_ip = "203.0.113.10"
+server_port = 8080
+server_addr = "0.0.0.0"
+files_dir = "data/temp"
+scripts_dir = "data/scripts"
+debug = false
+mysqldump_path = "mysqldump"
+pg_dump_path = "pg_dump"
+tls_cert = "tls/server.crt"
+tls_key = "tls/server.key"
+encrypt_backups = false
+encrypt_password = ""</pre>
+
+  <p>Server task storage: <code>backup.db</code> in the server directory (created on first sync). Use <code>chmod 600 backup.db</code> on Linux.</p>
+
+  <table>
+    <thead><tr><th>Key</th><th>Description</th><th>Default / notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>device_id</code></td>
+        <td>64-char hex fingerprint of the authorized client machine. Empty until first successful connect; then auto-saved. Clear to allow a new PC.</td>
+        <td><code>""</code> in deploy bundle. <code>chmod 600 config.toml</code>.</td>
+      </tr>
+      <tr>
+        <td><code>public_ip</code></td>
+        <td>IP or hostname the <strong>client</strong> uses to connect and download files.</td>
+        <td>Must be reachable from the client. Used in download URLs.</td>
+      </tr>
+      <tr>
+        <td><code>server_port</code></td>
+        <td>TCP port for WSS and HTTPS download.</td>
+        <td><code>8080</code></td>
+      </tr>
+      <tr>
+        <td><code>server_addr</code></td>
+        <td>Local bind address.</td>
+        <td><code>0.0.0.0</code> — listen on all interfaces.</td>
+      </tr>
+      <tr>
+        <td><code>files_dir</code></td>
+        <td>Temporary storage for backup archives before client download.</td>
+        <td><code>data/temp</code> — cleaned after <code>check_download</code>.</td>
+      </tr>
+      <tr>
+        <td><code>scripts_dir</code></td>
+        <td>Directory for <code>shell</code> task scripts.</td>
+        <td><code>data/scripts</code></td>
+      </tr>
+      <tr>
+        <td><code>debug</code></td>
+        <td>Logging verbosity.</td>
+        <td><code>false</code> — normal (INFO). <code>true</code> — verbose DEBUG logs + memory monitor when &gt;100 MB.</td>
+      </tr>
+      <tr>
+        <td><code>encrypt_backups</code></td>
+        <td>Legacy fallback: encrypt tasks synced <em>without</em> an <code>encrypt</code> field in task data.</td>
+        <td><code>false</code>. Prefer per-task <strong>Encrypt mode</strong> on the client.</td>
+      </tr>
+      <tr>
+        <td><code>encrypt_password</code></td>
+        <td>Passphrase for tasks with Encrypt mode on. One per VPS if you use different keys; store copies in <code>backup-decrypt</code> <code>[profiles]</code> on USB.</td>
+        <td>Empty until set. Required when any synced task has Encrypt mode on.</td>
+      </tr>
+      <tr>
+        <td><code>mysqldump_path</code></td>
+        <td>Path to <code>mysqldump</code> binary.</td>
+        <td><code>mysqldump</code> on PATH, or full path (e.g. <code>D:/mysql/bin/mysqldump.exe</code> on Windows)</td>
+      </tr>
+      <tr>
+        <td><code>pg_dump_path</code></td>
+        <td>Path to <code>pg_dump</code> binary.</td>
+        <td><code>pg_dump</code> (from PATH)</td>
+      </tr>
+      <tr>
+        <td><code>tls_cert</code></td>
+        <td>Server TLS certificate (PEM).</td>
+        <td><code>tls/server.crt</code></td>
+      </tr>
+      <tr>
+        <td><code>tls_key</code></td>
+        <td>Server TLS private key (PEM).</td>
+        <td><code>tls/server.key</code> — protect with <code>chmod 600</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="decrypt">
+  <h2>8. Decrypting .aes backups (backup-decrypt)</h2>
+
+  <p>
+    Build <code>decrypt/</code> (crate <code>backup-decrypt</code>) and keep the binary + <code>decrypt.toml</code> on a
+    <strong>USB stick</strong> (defense layer 5). Encryption passwords live on the server and on USB — not in client
+    <code>backup.db</code>.
+  </p>
+
+  <h3>When you need connection names</h3>
+  <p>
+    Each VPS connection in backup-client has a <strong>slug</strong> (latin name, e.g. <code>production</code>, <code>staging</code>).
+    Downloaded files go to <code>data/backups/&lt;slug&gt;/</code>. That slug is the <strong>connection name</strong> in
+    <code>backup-decrypt</code>.
+  </p>
+  <p>
+    Add one entry per VPS in the app (<strong>List connections → Add connection</strong>) or in
+    <code>[profiles]</code> in <code>decrypt.toml</code>. Connection name = subfolder under your backups root
+    (same slug as in backup-client):
+  </p>
+  <pre>path = "E:/backups"
+output_path = ""          # empty = next to .aes; or e.g. F:/decrypted
+
+[profiles]
+production = "encrypt_password from production VPS config.toml"
+staging = "encrypt_password from staging VPS"</pre>
+  <p>
+    Layout on disk (same as backup-client downloads):
+    <code>{path}/{connection-name}/backup_….zip.aes</code>.
+    When you browse to <code>…/production/file.zip.aes</code>, the tool picks the <code>production</code> password automatically.
+  </p>
+
+  <div class="note">
+    <strong>Password format</strong>
+    <p style="margin:0.5rem 0 0">
+      Any length and text — passphrase, words, or a generated string. Must match
+      <code>encrypt_password</code> on that server exactly. The menu can generate a random 28-character password;
+      copy the same value to the server, enable <strong>Encrypt mode</strong> on tasks, and restart <code>backup-server</code>.
+    </p>
+  </div>
+
+  <h3>Main menu</h3>
+  <ul>
+    <li><strong>Browse .aes files</strong> — folder browser under the configured root</li>
+    <li><strong>List connections</strong> — add a connection (name + auto-generated password) or edit existing ones</li>
+    <li><strong>Settings</strong> — backups root folder and optional output path for decrypted files</li>
+    <li><strong>Exit</strong></li>
+  </ul>
+  <p>
+    Per connection: change name, change password (visible input), regenerate random password, or delete.
+  </p>
+
+  <h3><code>output_path</code></h3>
+  <p>
+    Empty (default): <code>backup_foo.zip.aes</code> → <code>backup_foo.zip</code> beside the encrypted file.
+    When set: writes to <code>{output_path}/backup_foo.zip</code> (folder created if needed).
+    If the path is unavailable (USB unplugged), the tool errors — no silent fallback.
+  </p>
+
+  <h3>CLI</h3>
+  <pre>backup-decrypt                              # interactive menu
+backup-decrypt --key-file E:\decrypt.toml
+backup-decrypt E:\backups\production              # browser starting in subfolder
+backup-decrypt --file path\to\file.zip.aes
+backup-decrypt --file file.zip.aes --profile production</pre>
+  <p>
+    <code>--profile</code> selects a connection name from <code>[profiles]</code> when auto-detection from the path is not enough.
+  </p>
+
+  <div class="note note-warn">
+    <strong>Do not commit <code>decrypt.toml</code></strong>
+    <p style="margin:0.5rem 0 0">It contains encryption secrets. Add it to <code>.gitignore</code> on any machine where you edit it.</p>
+  </div>
+</section>
+
+<section id="limitations">
+  <h2>9. Limitations &amp; archive behaviour</h2>
+
+  <h3>File archives (<code>files_archive</code>, <code>dir_sync</code>)</h3>
+  <ul>
+    <li><strong>All extensions</strong> — every regular file under the source directory is a candidate (images, PDFs, ZIP, etc.). <code>dir_sync</code> does not filter by type.</li>
+    <li><strong>No extra copy in temp</strong> — the server builds one ZIP directly in <code>data/temp</code>; source files are read in place, not copied as loose files first.</li>
+    <li><strong>UTF-8 names</strong> — Cyrillic and Latin filenames are supported. Files whose names are not valid UTF-8 on the server filesystem are <em>skipped</em> (logged on the server).</li>
+    <li><strong>Broken / unreadable files</strong> — if a file cannot be read or added to the ZIP (permissions, I/O error, invalid entry name), it is skipped; the rest of the archive continues.</li>
+    <li><strong>50 MB per file (RAM)</strong> — each file is loaded entirely into memory before being written to the ZIP. Files larger than <strong>50 MB</strong> are skipped automatically. Very large archives made of many small files can still be large in total (your test: ~106 MB ZIP is fine).</li>
+    <li><strong>Instability risk</strong> — on a VPS with little RAM, many concurrent large files or other services may cause slow archives or OOM kills. Prefer weekly <code>dir_sync</code> for uploads instead of archiving the whole tree with <code>files_archive</code> every day.</li>
+    <li><strong>ZIP archives</strong> — all task types (<code>files_archive</code>, <code>dir_sync</code>, DB dumps) use the built-in Rust <code>zip</code> crate. No system <code>zip</code> package required on Linux or Windows.</li>
+  </ul>
+
+  <h3>Implemented features (v1.0)</h3>
+  <table>
+    <thead><tr><th>Feature</th><th>Summary</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Retention</strong></td>
+        <td>Per-connection local cleanup: 0 / 7 / 14 / 30 / 60 days; latest backup per task kept; <code>dir_sync</code> archives never deleted.</td>
+      </tr>
+      <tr>
+        <td><strong>dir_sync</strong></td>
+        <td>Incremental directory sync; <code>max_batch_mb</code>; cursor reset from task menu; no encryption.</td>
+      </tr>
+      <tr>
+        <td><strong>Per-task Encrypt mode</strong></td>
+        <td>Client task menu; server encrypts when <code>encrypt_password</code> is set.</td>
+      </tr>
+      <tr>
+        <td><strong>backup-decrypt</strong></td>
+        <td>Multi-connection passwords in <code>decrypt.toml</code>; browser; optional <code>output_path</code> to USB.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Log sizes are shown in human-readable form (KB / MB), e.g. <code>completed backup_catalog_sync_….zip (106.2 MB)</code>.</p>
+</section>
+
+<section id="license">
+  <h2>10. License &amp; disclaimer</h2>
+
+  <h3>License</h3>
+  <p>
+    The Backup System (backup-client, backup-monitor, backup-server, backup-decrypt) is released under the
+    <strong>MIT License</strong>. Copyright © 2026 Emelyanov Anton (<a href="mailto:geniden@gmail.com">geniden@gmail.com</a>).
+    Source code and license text: <a href="https://github.com/geniden/backup">https://github.com/geniden/backup</a>.
+    You may use, modify, and build the software for your own systems (including operating systems or platforms
+    not covered by official release binaries).
+  </p>
+
+  <h3>What this software is</h3>
+  <p>
+    This is a <strong>toolkit for building your own backup security stack</strong> — not a hosted backup service
+    and not a guarantee of data safety. It helps you schedule encrypted backups from your VPS servers to a machine
+    you control, with optional layers (TLS, server-side encryption, hardware-bound client, secrets on server,
+    offline decrypt). <strong>How many layers you enable and how you operate them is your decision.</strong>
+  </p>
+
+  <div class="note note-warn">
+    <strong>No liability for your data</strong>
+    <p style="margin:0.5rem 0 0">
+      The author is <strong>not responsible</strong> for loss, corruption, leakage, unauthorized access,
+      or unavailability of your data — whether caused by misconfiguration, stolen keys or passwords,
+      hardware failure, network issues, third-party software, unofficial builds, or any other reason.
+    </p>
+    <p style="margin:0.75rem 0 0">
+      <strong>Security is in the hands of the system administrator</strong> who deploys and runs the software:
+      protecting the client PC, root CA private key, server <code>config.toml</code> and <code>backup.db</code>,
+      encryption passwords, firewall rules, VPS access, and physical media (e.g. USB with <code>backup-decrypt</code>).
+    </p>
+    <p style="margin:0.75rem 0 0">
+      Download pre-built binaries only from the official project repository when possible.
+      Builds compiled by others are not reviewed or supported by the author.
+    </p>
+  </div>
+
+  <p>
+    The MIT License disclaimer in the repository <code>LICENSE</code> file applies in full.
+    This section summarizes the intent for operators; it does not replace the legal text of the license.
+  </p>
+</section>
+
+<footer>
+  Backup System v1.0.0 — User Manual · MIT License · <a href="https://github.com/geniden/backup">github.com/geniden/backup</a>
+  <br>
+  Open this file in any modern browser. File location: <code>client/docs/manual.html</code>
+</footer>
+
+</div>
+</body>
+</html>

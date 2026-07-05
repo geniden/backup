@@ -1,0 +1,47 @@
+{
+  "startup.version": "backup-server {version} 正在启动...",
+
+  "setup.new_config": "将创建新配置：{path}",
+  "setup.device_id_hint": "device_id：（留空 — 首次客户端连接时自动注册）",
+  "setup.config_saved": "配置已保存：{path}",
+  "setup.no_bundle_title": "首次设置 — 需要 TLS 和配置文件",
+  "setup.no_bundle_body": "服务器不能仅凭二进制文件启动。",
+  "setup.no_bundle_step1": "  1. 在备份客户端：连接 → 添加连接 → 输入服务器 IP",
+  "setup.no_bundle_step2": "  2. 客户端生成 config.toml 和 tls/（server.crt + server.key）",
+  "setup.no_bundle_step3": "  3. 将这些文件复制到本机的 backup-server 旁",
+  "setup.no_bundle_step4": "  4. 再次运行 ./backup-server",
+  "setup.no_bundle_paths": "所需文件：",
+  "setup.no_bundle_cert": "    {cert}",
+  "setup.no_bundle_key": "    {key}",
+  "setup.no_bundle_config": "    {config}",
+
+  "setup.public_ip_prompt": "外网 [IP:端口]：",
+  "setup.public_ip_non_tty": "public_ip 为本地 (127.0.0.1)。请在 config.toml 中设置外网 IP 并重启。",
+  "setup.public_ip_saved": "public_ip 已设为 {host}（已写入 config.toml）",
+  "setup.public_ip_saved_port": "服务器 IP {host}:{port}（已写入 config.toml）",
+  "setup.public_ip_required": "必填。示例：91.201.40.187 或 91.201.40.187:8080",
+  "setup.public_ip_invalid_host": "无效主机",
+  "setup.public_ip_invalid_port": "无效端口：{port}",
+  "setup.public_ip_invalid": "无效值。示例：91.201.40.187 或 91.201.40.187:8080",
+  "setup.public_ip_no_localhost": "请使用外网 IP，不要用 127.0.0.1 或 localhost",
+  "setup.stdin_error": "无法读取输入（{detail}）。请重试或在 config.toml 中设置 public_ip。",
+
+  "common.arrow_hint": "  -> {msg}",
+
+  "state.on": "开",
+  "state.off": "关",
+
+  "tls.missing_title": "需要 TLS 证书和私钥",
+  "tls.missing_body": "HTTPS/WSS 为必需。请放置客户端部署包中的文件：",
+  "tls.missing_cert": "  证书：{path}",
+  "tls.missing_key": "  私钥：{path}",
+  "tls.missing_how": "在客户端：连接 → 添加连接（或续期证书）→ 复制 tls/ 和 config.toml 到服务器。",
+  "tls.expired": "TLS 证书已于 {date} 过期（CN: {cn}）。请从客户端续期并重启服务器。",
+
+  "banner.server_ip": "服务器 IP：{addr} (https/wss)",
+  "banner.tls": "TLS：{cn} — 有效 {days} 天，至 {date}",
+  "banner.device_id_pending": "DEVICE-ID：（等待首次客户端连接）",
+  "banner.device_id": "DEVICE-ID：{prefix}...{suffix}",
+  "banner.debug": "调试：{state} (debug=true — 详细日志 + 内存 >100 MB)",
+  "banner.status": "状态：在线"
+}

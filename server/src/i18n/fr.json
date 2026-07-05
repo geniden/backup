@@ -1,0 +1,47 @@
+{
+  "startup.version": "Démarrage de backup-server {version}...",
+
+  "setup.new_config": "Nouvelle configuration : {path}",
+  "setup.device_id_hint": "device_id : (vide — enregistré à la première connexion client)",
+  "setup.config_saved": "Configuration enregistrée : {path}",
+  "setup.no_bundle_title": "Première installation — TLS et configuration requis",
+  "setup.no_bundle_body": "Ce serveur ne peut pas démarrer avec le binaire seul.",
+  "setup.no_bundle_step1": "  1. Sur le client : Connexions → Ajouter → saisir l'IP du serveur",
+  "setup.no_bundle_step2": "  2. Le client génère config.toml et tls/ (server.crt + server.key)",
+  "setup.no_bundle_step3": "  3. Copier ces fichiers à côté de backup-server sur cette machine",
+  "setup.no_bundle_step4": "  4. Relancer ./backup-server",
+  "setup.no_bundle_paths": "Fichiers attendus :",
+  "setup.no_bundle_cert": "    {cert}",
+  "setup.no_bundle_key": "    {key}",
+  "setup.no_bundle_config": "    {config}",
+
+  "setup.public_ip_prompt": "Mon IP externe [IP:port] :",
+  "setup.public_ip_non_tty": "public_ip est local (127.0.0.1). Définir l'IP externe dans config.toml et redémarrer.",
+  "setup.public_ip_saved": "public_ip défini sur {host} (enregistré dans config.toml)",
+  "setup.public_ip_saved_port": "IP serveur {host}:{port} (enregistrée dans config.toml)",
+  "setup.public_ip_required": "Obligatoire. Exemple : 91.201.40.187 ou 91.201.40.187:8080",
+  "setup.public_ip_invalid_host": "Hôte invalide",
+  "setup.public_ip_invalid_port": "Port invalide : {port}",
+  "setup.public_ip_invalid": "Valeur invalide. Exemple : 91.201.40.187 ou 91.201.40.187:8080",
+  "setup.public_ip_no_localhost": "Utiliser l'IP externe, pas 127.0.0.1 ou localhost",
+  "setup.stdin_error": "Impossible de lire l'entrée ({detail}). Réessayez ou définissez public_ip dans config.toml.",
+
+  "common.arrow_hint": "  -> {msg}",
+
+  "state.on": "oui",
+  "state.off": "non",
+
+  "tls.missing_title": "Certificat TLS et clé privée requis",
+  "tls.missing_body": "HTTPS/WSS obligatoire. Placer les fichiers du bundle client :",
+  "tls.missing_cert": "  Certificat : {path}",
+  "tls.missing_key": "  Clé privée : {path}",
+  "tls.missing_how": "Sur le client : Connexions → Ajouter (ou Renouveler certificat) → copier tls/ et config.toml.",
+  "tls.expired": "Certificat TLS expiré le {date} (CN: {cn}). Renouveler depuis le client et redémarrer.",
+
+  "banner.server_ip": "IP serveur : {addr} (https/wss)",
+  "banner.tls": "TLS : {cn} — valide {days} jour(s) jusqu'au {date}",
+  "banner.device_id_pending": "DEVICE-ID : (en attente — première connexion client)",
+  "banner.device_id": "DEVICE-ID : {prefix}...{suffix}",
+  "banner.debug": "Debug : {state} (debug=true — logs détaillés + mémoire >100 Mo)",
+  "banner.status": "Statut : EN LIGNE"
+}

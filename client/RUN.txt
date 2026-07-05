@@ -1,0 +1,148 @@
+================================================================================
+  BACKUP CLIENT — run guide (pre-built binaries)
+================================================================================
+
+1. FOLDER CONTENTS
+------------------
+
+Copy one folder to your machine (e.g. C:\backup-client or /opt/backup-client):
+
+  Windows:
+    backup-client.exe
+    backup-monitor.exe      (optional TUI dashboard)
+
+  Linux:
+    backup-client
+    backup-monitor            (optional)
+
+On first run the client creates next to the binary:
+
+    backup.db                 — connections, tasks, run history
+    data/
+      ca/                     — certificates and deploy bundles
+      backups/                — downloaded archives
+
+Important: backup-client and backup-monitor must live in the SAME folder as backup.db.
+           Monitor reads backup.db from that folder by default.
+
+
+2. FIRST RUN (setup)
+--------------------
+
+  Windows:   .\backup-client.exe
+  Linux:     ./backup-client
+
+Interactive menu:
+
+  Add connection       — add a VPS (get data/ca/{slug}/)
+  Add task             — add a backup task (via connection menu)
+  Start scheduler      — see section 3
+
+After Add connection copy data/ca/{slug}/ to the target VPS
+(next to backup-server) and start the server there.
+
+
+3. SCHEDULER (production)
+-------------------------
+
+The scheduler connects to servers, runs cron tasks, downloads archives.
+
+  Windows:   .\backup-client.exe serve
+  Linux:     ./backup-client serve
+
+Stop: Ctrl+C
+
+Log to file (second window):
+
+  Windows:   Get-Content data\backup.log -Wait -Tail 50
+  Linux:     tail -f data/backup.log
+
+
+4. MONITOR (optional TUI)
+-------------------------
+
+backup-monitor is separate. It does not replace the scheduler.
+Shows task status from backup.db (read-only). Run in a SECOND terminal while serve runs.
+
+  Windows:   .\backup-monitor.exe
+  Linux:     ./backup-monitor
+
+Keys: q / Esc — quit, r — refresh
+
+If binaries are not next to backup.db:
+
+  backup-monitor --db /path/to/backup.db
+
+
+5. TYPICAL SETUPS
+-----------------
+
+A) Dev / test on Windows
+   Terminal 1:  .\backup-client.exe serve
+   Terminal 2:  .\backup-monitor.exe
+   Terminal 3:  Get-Content data\backup.log -Wait -Tail 50
+
+B) Linux VPS (scheduler only)
+   systemd or screen/tmux:  ./backup-client serve
+   Optional dashboard:     ./backup-monitor   (second SSH session)
+
+C) Setup only (no scheduler)
+   ./backup-client          — menu: connections, tasks, Run now
+
+
+6. LINUX SYSTEMD EXAMPLE
+------------------------
+
+File /etc/systemd/system/backup-client.service:
+
+  [Unit]
+  Description=Backup Client Scheduler
+  After=network-online.target
+
+  [Service]
+  Type=simple
+  WorkingDirectory=/opt/backup-client
+  ExecStart=/opt/backup-client/backup-client serve
+  Restart=on-failure
+
+  [Install]
+  WantedBy=multi-user.target
+
+  systemctl enable --now backup-client
+  journalctl -u backup-client -f
+
+
+7. CLI (no menu)
+----------------
+
+  backup-client connection-add
+  backup-client task-add
+  backup-client serve
+
+  backup-client --help
+
+
+8. FAQ
+------
+
+Q: One database or several?
+A: One backup.db per client installation (one folder with binaries).
+
+Q: Is monitor required?
+A: No. backup-client serve + backup.log is enough.
+
+Q: Where are downloaded backups?
+A: data/backups/{connection-slug}/
+
+Q: Why STALE in monitor?
+A: Task never succeeded or scheduler is not running.
+
+
+  Cheat sheet
+  -----------
+  Setup:         backup-client
+  Scheduler:     backup-client serve
+  Dashboard:     backup-monitor
+  Logs:          data/backup.log
+
+  Docs: https://github.com/geniden/backup

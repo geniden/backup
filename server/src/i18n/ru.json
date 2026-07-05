@@ -1,0 +1,47 @@
+{
+  "startup.version": "backup-server {version} запуск...",
+
+  "setup.new_config": "Будет создан config: {path}",
+  "setup.device_id_hint": "device_id: (пусто — регистрация при первом подключении клиента)",
+  "setup.config_saved": "Config сохранён: {path}",
+  "setup.no_bundle_title": "Первый запуск — нужны TLS и config",
+  "setup.no_bundle_body": "Сервер не запускается только с бинарником backup-server.",
+  "setup.no_bundle_step1": "  1. На клиенте: Подключения → Добавить подключение → укажите IP этого сервера",
+  "setup.no_bundle_step2": "  2. Клиент создаст config.toml и tls/ (server.crt + server.key)",
+  "setup.no_bundle_step3": "  3. Скопируйте эти файлы на сервер рядом с backup-server",
+  "setup.no_bundle_step4": "  4. Запустите ./backup-server снова",
+  "setup.no_bundle_paths": "Ожидаемые файлы:",
+  "setup.no_bundle_cert": "    {cert}",
+  "setup.no_bundle_key": "    {key}",
+  "setup.no_bundle_config": "    {config}",
+
+  "setup.public_ip_prompt": "Мой внешний [IP:порт]:",
+  "setup.public_ip_non_tty": "public_ip локальный (127.0.0.1). Укажите внешний IP в config.toml и перезапустите.",
+  "setup.public_ip_saved": "public_ip = {host} (сохранено в config.toml)",
+  "setup.public_ip_saved_port": "IP сервера {host}:{port} (сохранено в config.toml)",
+  "setup.public_ip_required": "Обязательно. Пример: 91.201.40.187 или 91.201.40.187:8080",
+  "setup.public_ip_invalid_host": "Неверный хост",
+  "setup.public_ip_invalid_port": "Неверный порт: {port}",
+  "setup.public_ip_invalid": "Неверное значение. Пример: 91.201.40.187 или 91.201.40.187:8080",
+  "setup.public_ip_no_localhost": "Укажите внешний IP, не 127.0.0.1 и не localhost",
+  "setup.stdin_error": "Не удалось прочитать ввод ({detail}). Повторите или задайте public_ip в config.toml.",
+
+  "common.arrow_hint": "  -> {msg}",
+
+  "state.on": "Вкл.",
+  "state.off": "Выкл.",
+
+  "tls.missing_title": "Нужны TLS-сертификат и закрытый ключ",
+  "tls.missing_body": "HTTPS/WSS обязателен. Скопируйте файлы из пакета развёртывания клиента:",
+  "tls.missing_cert": "  Сертификат: {path}",
+  "tls.missing_key": "  Ключ: {path}",
+  "tls.missing_how": "На клиенте: Подключения → Добавить подключение (или Обновить сертификат) → скопируйте tls/ и config.toml на сервер.",
+  "tls.expired": "TLS-сертификат истёк {date} (CN: {cn}). Обновите через клиент и перезапустите сервер.",
+
+  "banner.server_ip": "IP сервера: {addr} (https/wss)",
+  "banner.tls": "TLS: {cn} — действителен {days} дн. до {date}",
+  "banner.device_id_pending": "DEVICE-ID: (ожидание — первое подключение клиента)",
+  "banner.device_id": "DEVICE-ID: {prefix}...{suffix}",
+  "banner.debug": "Debug: {state} (debug=true — подробные логи + монитор памяти >100 MB)",
+  "banner.status": "Статус: ONLINE"
+}

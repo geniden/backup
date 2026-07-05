@@ -1,0 +1,47 @@
+{
+  "startup.version": "backup-server {version} wird gestartet...",
+
+  "setup.new_config": "Neue Konfiguration wird erstellt: {path}",
+  "setup.device_id_hint": "device_id: (leer — wird beim ersten Client-Connect registriert)",
+  "setup.config_saved": "Konfiguration gespeichert: {path}",
+  "setup.no_bundle_title": "Ersteinrichtung — TLS und Konfiguration erforderlich",
+  "setup.no_bundle_body": "Dieser Server kann nicht nur mit der Binary starten.",
+  "setup.no_bundle_step1": "  1. Am Backup-Client: Verbindungen → Verbindung hinzufügen → Server-IP eingeben",
+  "setup.no_bundle_step2": "  2. Der Client erzeugt config.toml und tls/ (server.crt + server.key)",
+  "setup.no_bundle_step3": "  3. Diese Dateien neben backup-server auf diesem Rechner kopieren",
+  "setup.no_bundle_step4": "  4. ./backup-server erneut ausführen",
+  "setup.no_bundle_paths": "Erwartete Dateien:",
+  "setup.no_bundle_cert": "    {cert}",
+  "setup.no_bundle_key": "    {key}",
+  "setup.no_bundle_config": "    {config}",
+
+  "setup.public_ip_prompt": "Meine externe [IP:Port]:",
+  "setup.public_ip_non_tty": "public_ip ist lokal (127.0.0.1). Externe IP in config.toml setzen und neu starten.",
+  "setup.public_ip_saved": "public_ip auf {host} gesetzt (in config.toml gespeichert)",
+  "setup.public_ip_saved_port": "Server-IP auf {host}:{port} gesetzt (in config.toml gespeichert)",
+  "setup.public_ip_required": "Erforderlich. Beispiel: 91.201.40.187 oder 91.201.40.187:8080",
+  "setup.public_ip_invalid_host": "Ungültiger Host",
+  "setup.public_ip_invalid_port": "Ungültiger Port: {port}",
+  "setup.public_ip_invalid": "Ungültiger Wert. Beispiel: 91.201.40.187 oder 91.201.40.187:8080",
+  "setup.public_ip_no_localhost": "Externe IP verwenden, nicht 127.0.0.1 oder localhost",
+  "setup.stdin_error": "Eingabe fehlgeschlagen ({detail}). Erneut versuchen oder public_ip in config.toml setzen.",
+
+  "common.arrow_hint": "  -> {msg}",
+
+  "state.on": "an",
+  "state.off": "aus",
+
+  "tls.missing_title": "TLS-Zertifikat und privater Schlüssel erforderlich",
+  "tls.missing_body": "HTTPS/WSS ist Pflicht. Dateien aus dem Client-Deploy-Bundle ablegen:",
+  "tls.missing_cert": "  Zertifikat: {path}",
+  "tls.missing_key": "  Privater Schlüssel: {path}",
+  "tls.missing_how": "Am Client: Verbindungen → Verbindung hinzufügen (oder Zertifikat erneuern) → tls/ und config.toml kopieren.",
+  "tls.expired": "TLS-Zertifikat abgelaufen am {date} (CN: {cn}). Vom Backup-Client erneuern und Server neu starten.",
+
+  "banner.server_ip": "Server-IP: {addr} (https/wss)",
+  "banner.tls": "TLS: {cn} — gültig noch {days} Tag(e) bis {date}",
+  "banner.device_id_pending": "DEVICE-ID: (ausstehend — erster Client-Connect)",
+  "banner.device_id": "DEVICE-ID: {prefix}...{suffix}",
+  "banner.debug": "Debug: {state} (debug=true — ausführliche Logs + Speicher >100 MB)",
+  "banner.status": "Status: ONLINE"
+}

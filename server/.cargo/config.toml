@@ -1,0 +1,8 @@
+# Portable Linux x86_64 binaries: avoid SIGILL/SIGSEGV on older VPS CPUs when the
+# build machine (WSL/desktop) supports newer instructions (AVX2, etc.).
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "target-cpu=x86-64"]
+
+[target.x86_64-unknown-linux-musl]
+linker = "musl-gcc"
+rustflags = ["-C", "target-cpu=x86-64"]
