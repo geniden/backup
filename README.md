@@ -1,5 +1,9 @@
 # Backup System
 
+<p align="center">
+  <img src="client/docs/art512.jpg" alt="Backup System — layered protection" width="512">
+</p>
+
 Distributed backup toolkit for your own VPS servers (**Windows** and **Linux**).  
 A central **backup-client** schedules tasks over encrypted WSS, downloads archives, and stores them locally. Each VPS runs a lightweight **backup-server** agent. Optional **backup-decrypt** on USB decrypts `.aes` files offline.
 
