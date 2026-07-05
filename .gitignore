@@ -21,3 +21,11 @@ tests/
 
 # Release staging (optional local folder)
 dist/
+
+# Release archives — attach via GitHub Releases, not git
+/backup-*-*.tar.gz
+/backup-*-*.zip
+rustup-init.exe
+
+# Old nested repo folder (remove from disk if still present)
+/backup/
