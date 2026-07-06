@@ -47,7 +47,9 @@ From [GitHub Releases](https://github.com/geniden/backup/releases):
 - **Backup machine:** `backup-client` (+ optional `backup-monitor`)
 - **Each VPS:** `backup-server` (Linux musl or Windows)
 
-Or build from source — see [README.md](README.md) and `build-all.ps1` / `build-all.sh`.
+Or build from source — see **[BUILD.md](BUILD.md)**.
+
+For a full walkthrough with screenshots, see **[Setup guide (EN)](docs/TUTORIAL.en.md)** · **[RU](docs/TUTORIAL.ru.md)**.
 
 ### Step 1 — client, first connection
 
@@ -186,11 +188,7 @@ Details: [manual — decrypt](client/docs/manual.html#decrypt).
 
 ## Build from source
 
-Requires **Rust 1.70+** ([latest stable](https://rust.rust-lang.org/) recommended).  
-`edition = "2021"` in Cargo.toml is the **Rust language edition**, not a calendar year.
-
-Windows: **`build-all.ps1`** → **`dist/win64/`**  
-Linux (WSL): **`build-all.sh`** → **`dist/linux-musl/`**
+See **[BUILD.md](BUILD.md)**.
 
 ---
 

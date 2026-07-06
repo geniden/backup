@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backup System — пошаговая настройка</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --border: #30363d;
+      --warn-bg: #2d2a1f;
+      --warn-border: #d29922;
+      --good-bg: #1a2e1f;
+      --good-border: #3fb950;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      margin: 0;
+    }
+    .wrap { max-width: 52rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 { font-size: 1.75rem; margin: 0 0 0.5rem; color: #fff; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; }
+    .meta-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .meta-badges span {
+      font-size: 0.82rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.25rem 0.6rem;
+      color: var(--accent);
+    }
+    nav.toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    nav.toc h2 { font-size: 1rem; margin: 0 0 0.75rem; color: var(--accent); }
+    nav.toc ol { margin: 0; padding-left: 1.25rem; }
+    nav.toc li { margin: 0.35rem 0; }
+    nav.toc a { color: var(--accent); text-decoration: none; }
+    nav.toc a:hover { text-decoration: underline; }
+    section { margin-bottom: 2.5rem; }
+    h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-top: 2rem;
+    }
+    h3 { font-size: 1.1rem; color: var(--accent); margin-top: 1.5rem; }
+    h4 { font-size: 1rem; margin-top: 1.25rem; color: #fff; }
+    p { margin: 0.75rem 0; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+    li { margin: 0.35rem 0; }
+    code, pre {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.88rem;
+    }
+    code {
+      background: var(--surface);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      line-height: 1.45;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--surface); color: var(--accent); }
+    .note {
+      background: var(--good-bg);
+      border-left: 4px solid var(--good-border);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+    .note-warn {
+      background: var(--warn-bg);
+      border-left-color: var(--warn-border);
+    }
+    .note strong { color: #fff; }
+    figure.shot {
+      margin: 1.25rem 0;
+      padding: 0;
+    }
+    figure.shot img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    figure.shot figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .lang-switch { margin-top: 0.75rem; font-size: 0.9rem; }
+    .lang-switch a { color: var(--accent); margin-right: 1rem; }
+    .shield-levels {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: lvl;
+    }
+    .shield-levels li {
+      counter-increment: lvl;
+      position: relative;
+      padding: 0.55rem 0 0.55rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.93rem;
+    }
+    .shield-levels li:last-child { border-bottom: none; }
+    .shield-levels li::before {
+      content: counter(lvl);
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 1.65rem;
+      height: 1.65rem;
+      line-height: 1.65rem;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(63, 185, 80, 0.12);
+      border: 1px solid rgba(63, 185, 80, 0.35);
+      border-radius: 50%;
+    }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Backup System — настройка за один вечер</h1>
+  <p class="subtitle">Дружелюбный гайд: неттоп + VPS + первый бэкап · v1.0.0</p>
+  <div class="meta-badges">
+    <span>⏱ ~15 мин до первого бэкапа</span>
+    <span>Windows client</span>
+    <span>Linux server</span>
+    <span>опционально USB decrypt</span>
+  </div>
+  <p class="subtitle" style="margin-top:1rem">
+    Полный справочник: <a href="../client/docs/manual.html">manual.html</a> ·
+    <a href="../PAGE.md">PAGE.md</a> ·
+    <a href="https://github.com/geniden/backup/releases">Releases</a>
+  </p>
+  <p class="lang-switch"><a href="TUTORIAL.en.md">English (Markdown, GitHub)</a> · <a href="tutorial.en.html">English (HTML, offline)</a></p>
+</header>
+
+<nav class="toc">
+  <h2>Содержание</h2>
+  <ol>
+    <li><a href="#intro">Как я делаю бэкапы</a></li>
+    <li><a href="#hardware">Неттоп и дистрибутивы</a></li>
+    <li><a href="#part1">Часть 1 — клиент и сервер</a></li>
+    <li><a href="#part2">Часть 2 — задачи и планировщик</a></li>
+    <li><a href="#part3">Часть 3 — продакшн и шифрование</a></li>
+    <li><a href="#part4">Мониторинг и логи</a></li>
+    <li><a href="#pitfalls">Грабли</a></li>
+  </ol>
+</nav>
+
+<section id="intro">
+  <h2>Как я делаю бэкапы</h2>
+  <p>
+    Обслуживаю сайты и сервера небольших компаний — SaaS и интернет-магазины. Нужны бэкапы БД и файлов.
+    Слепок всего диска — слишком тяжёлый; обычно хватает дампа MySQL и архива каталога магазина.
+  </p>
+  <p>
+    Можно поставить backup-client на VPS, но надёжнее держать архивы <strong>у себя</strong> на отдельной машине, а не «где-то в облаке».
+  </p>
+  <ul>
+    <li>Бэкапы на отдельном неттопе - не шумит, потребление ~35 W</li>
+    <li>Свой <code>device_id</code> на backup-PC</li>  
+    <li>В продакшн-режиме пароли БД на сервере, не на клиенте</li>
+    <li>AES + ключи на флешке (backup-decrypt)</li>
+  </ul>
+
+  <h3>Пять уровней защиты</h3>
+  <ol class="shield-levels">
+    <li><strong>TLS</strong> <span class="level-note">Свой CA, WSS + HTTPS — базовая линия</span></li>
+    <li><strong>Encrypt mode</strong> <span class="level-note">AES на сервере → на диске <code>*.aes</code></span></li>
+    <li><strong>device_id</strong> <span class="level-note">Сервер принимает только ваш backup-PC</span></li>
+    <li><strong>Secrets: Production</strong> <span class="level-note">Пароли БД только на backup-server</span></li>
+    <li><strong>backup-decrypt на USB</strong> <span class="level-note">Пароли расшифровки не на неттопе</span></li>
+  </ol>
+</section>
+
+<section id="hardware">
+  <h2>Неттоп и дистрибутивы</h2>
+
+  <h3>Железо</h3>
+  <p><strong>HP ProDesk 260 G2</strong> (б/у, ~$50–75): i3-6100, 16 GB RAM, SSD 256 GB, бесшумный, ~35 W.</p>
+  <figure class="shot">
+    <img src="screenshots/mini-pc.jpg" alt="Мини-ПК на полке" width="800">
+    <figcaption>Неттоп круглосуточный backup-client</figcaption>
+  </figure>
+
+  <h3>Скачать</h3>
+  <p><a href="https://github.com/geniden/backup/releases">GitHub Releases</a>:</p>
+  <ul>
+    <li>Неттоп (Windows): <code>backup-client-1.0.0-windows-x64.zip</code></li>
+    <li>VPS (Linux): <code>backup-server-1.0.0-linux-x64-musl.tar.gz</code></li>
+    <li>USB (опционально): <code>backup-decrypt-1.0.0-windows-x64.zip</code></li>
+  </ul>
+
+  <p>Распаковка на диске <code>C:\backup\</code>:</p>
+  <figure class="shot">
+    <img src="screenshots/client-0.jpg" alt="Папки client server decrypt">
+    <figcaption>Структура C:\backup\</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/client-1.jpg" alt="backup-client">
+    <figcaption>backup-client.exe</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/monitor-1.jpg" alt="backup-monitor">
+    <figcaption>backup-monitor (опционально)</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/server-2.jpg" alt="backup-server на VPS">
+    <figcaption>backup-server на Linux VPS</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/decrypt-1.jpg" alt="backup-decrypt">
+    <figcaption>backup-decrypt на флешке</figcaption>
+  </figure>
+</section>
+
+<section id="part1">
+  <h2>Часть 1. Клиент и сервер</h2>
+
+  <h3>1.1. Первый запуск</h3>
+  <p>Запусти <code>C:\backup\client\backup-client.exe</code></p>
+  <p><strong>Настройки → Язык</strong> — English, Deutsch, Français, Русский, 中文.</p>
+
+  <h3>1.2. Добавить подключение</h3>
+  <p><strong>Подключения → Добавить подключение</strong></p>
+  <p>На «Проверить подключение сейчас?» — <strong>n</strong> (сервер ещё не поднят).</p>
+  <figure class="shot">
+    <img src="screenshots/client-3.jpg" alt="Добавление подключения">
+    <figcaption>Имя slug (например bash02) и IP:port</figcaption>
+  </figure>
+  <p>Клиент создаёт пакет для сервера:</p>
+  <pre>C:\backup\client\data\ca\bash02\
+├── config.toml
+├── tls\          (server.crt, server.key)
+├── service.sh
+└── README.txt</pre>
+  <div class="note">
+    <strong>TLS</strong> — личный CA, не публичный. Папка <code>ca\bash02\</code> — всё для VPS в одном месте.
+  </div>
+
+  <h3>1.3. Копирование на VPS</h3>
+  <div class="note note-warn">
+    <strong>FileZilla</strong> на моём опыте иногда <strong>ломает</strong> Linux-бинарник (<code>Exec format error</code>).
+    Надёжно: <strong>WinSCP (Binary)</strong>, <strong>FAR + SFTP</strong>, <strong>scp</strong> из PowerShell.
+    После копирования: <code>file backup-server</code> → <code>ELF 64-bit … statically linked</code>.
+  </div>
+  <pre>mkdir -p /opt/backup</pre>
+  <pre># PowerShell (OpenSSH)
+scp -r C:\backup\client\data\ca\bash02\* user@203.0.113.10:/opt/backup/
+scp C:\backup\server\backup-server user@203.0.113.10:/opt/backup/</pre>
+  <figure class="shot">
+    <img src="screenshots/server-1.jpg" alt="Содержимое /opt/backup">
+    <figcaption>Итог на сервере: backup-server, config.toml, tls/, service.sh</figcaption>
+  </figure>
+
+  <h3>1.4. Запуск на VPS</h3>
+  <pre>cd /opt/backup
+chmod +x backup-server service.sh
+./backup-server</pre>
+  <p><code>chmod 600 tls/server.key</code> — обычно <strong>не нужен</strong>: backup-server и service.sh выставят сами. Если сервер ругается на ключ — сделай вручную.</p>
+  <figure class="shot">
+    <img src="screenshots/server-2.jpg" alt="Сервер запущен">
+    <figcaption>Пробный запуск или systemctl status</figcaption>
+  </figure>
+  <pre>sudo ./service.sh
+sudo systemctl status backup-server</pre>
+
+  <h4>Шпаргалка systemctl</h4>
+  <table>
+    <thead><tr><th>Команда</th><th>Действие</th></tr></thead>
+    <tbody>
+      <tr><td><code>sudo systemctl start backup-server</code></td><td>Запустить</td></tr>
+      <tr><td><code>sudo systemctl stop backup-server</code></td><td>Остановить</td></tr>
+      <tr><td><code>sudo systemctl restart backup-server</code></td><td>После правки config.toml</td></tr>
+      <tr><td><code>sudo systemctl enable backup-server</code></td><td>Автозапуск при загрузке Linux</td></tr>
+      <tr><td><code>sudo journalctl -u backup-server -f</code></td><td>Логи в реальном времени</td></tr>
+    </tbody>
+  </table>
+  <pre>free -h    # память
+df -h      # диск
+uptime     # нагрузка</pre>
+
+  <h3>1.5. Проверка с клиента</h3>
+  <p><strong>Подключения → bash02 → Проверить подключение</strong></p>
+  <p>При первом успехе сервер сохраняет <code>device_id</code> этого ПК в <code>config.toml</code>.</p>
+  <figure class="shot">
+    <img src="screenshots/client-6.jpg" alt="Подключение успешно">
+    <figcaption>OK — TLS и device_id зарегистрирован</figcaption>
+  </figure>
+  <p>Сменить backup-PC: на VPS <code>device_id = ""</code> → <code>systemctl restart backup-server</code> → проверка с нового ПК.</p>
+  <pre># Ограничить порт только IP клиента (пример UFW)
+sudo ufw allow from ТВОЙ_IP to any port 8080 proto tcp</pre>
+</section>
+
+<section id="part2">
+  <h2>Часть 2. Задачи и планировщик</h2>
+
+  <h3>2.1. Добавить задачу</h3>
+  <p><strong>Подключения → bash02 → Добавить задачу</strong></p>
+  <p>Настройка задач — ядро системы: тип, параметры и <strong>расписание</strong> определяют, что и когда
+  копируется с VPS. Остальные пункты меню (планировщик, шифрование) работают поверх уже созданных задач.</p>
+  <figure class="shot">
+    <img src="screenshots/client-4.jpg" alt="Меню задач">
+  </figure>
+
+  <table>
+    <thead><tr><th>Тип</th><th>Когда</th></tr></thead>
+    <tbody>
+      <tr><td>mysql_dump</td><td>MySQL / MariaDB</td></tr>
+      <tr><td>postgresql_dump</td><td>PostgreSQL</td></tr>
+      <tr><td>files_archive</td><td>Папка сайта, конфиги</td></tr>
+      <tr><td>sqlite_dump</td><td>Файл SQLite</td></tr>
+      <tr><td>shell</td><td>Свой .sh в data/scripts/</td></tr>
+      <tr><td>dir_sync</td><td>Инкремент (без AES)</td></tr>
+    </tbody>
+  </table>
+  <figure class="shot">
+    <img src="screenshots/client-5.jpg" alt="Параметры задачи">
+    <figcaption>Имя, расписание, параметры БД или пути</figcaption>
+  </figure>
+
+  <h4>Расписание (cron)</h4>
+  <p>При вводе клиент показывает подсказку по полям. После сохранения вы увидите полное выражение, например
+  <code>→ сохранено как: 0 8 * * *</code>.</p>
+  <p>Формат — <strong>5 полей</strong>: минута · час · день месяца · месяц · день недели.
+  Звёздочки <code>*</code> («каждый») можно <strong>не вводить</strong> — недостающие поля дополняются автоматически.
+  Запись <code>/N</code> понимается как <code>*/N</code> (каждые N единиц в этом поле).</p>
+
+  <table>
+    <thead><tr><th>Что ввести</th><th>Сохранится как</th><th>Когда запуск</th></tr></thead>
+    <tbody>
+      <tr><td><code>*/5</code></td><td><code>*/5 * * * *</code></td><td>каждые 5 минут (для теста)</td></tr>
+      <tr><td><code>0 8</code></td><td><code>0 8 * * *</code></td><td>ежедневно в 08:00</td></tr>
+      <tr><td><code>0 2</code></td><td><code>0 2 * * *</code></td><td>ежедневно в 02:00</td></tr>
+      <tr><td><code>0 /2</code></td><td><code>0 */2 * * *</code></td><td>каждые 2 часа (в :00)</td></tr>
+      <tr><td><code>*/60</code> или <code>/60</code></td><td><code>0 * * * *</code></td><td>каждый час</td></tr>
+      <tr><td><code>*/120</code></td><td><code>0 */2 * * *</code></td><td>каждые 2 часа</td></tr>
+      <tr><td><code>*/30 * * * *</code></td><td>—</td><td>каждые 30 минут</td></tr>
+      <tr><td><code>0 0 * * 0</code></td><td>—</td><td>каждое воскресенье в полночь</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note note-warn">
+    <strong>Несколько задач на одно время</strong>
+    <p style="margin:0.5rem 0 0">Если много задач (5–10 и больше) стартуют в <strong>одну и ту же минуту</strong>,
+    сервер может не успеть принять всё в очередь — часть запусков будет
+    <strong>пропущена</strong> (в логе: «ПРОПУЩЕНА в этот запуск»).</p>
+    <p style="margin:0.5rem 0 0">Разносите задачи <strong>хотя бы по минутам</strong>: первая в минуту <code>0</code>,
+    вторая в <code>1</code>, третья в <code>2</code>… Или с шагом 5: <code>0</code>, <code>5</code>, <code>10</code>
+    в том же часу.</p>
+    <p style="margin:0.5rem 0 0">Пример для трёх дампов БД утром: <code>0 8 * * *</code>,
+    <code>1 8 * * *</code>, <code>2 8 * * *</code>.</p>
+  </div>
+
+  <h4>Пути к папкам на VPS</h4>
+  <p>Только типы <strong>files_archive</strong> и <strong>dir_sync</strong> работают с файлами на сервере напрямую —
+  в параметрах задачи нужен <strong>абсолютный путь</strong> к каталогу. Остальные типы (дампы БД, sqlite, shell)
+  используют свои поля (хост БД, скрипт и т.д.).</p>
+  <p>Чтобы узнать путь на VPS для нужной папки, зайдите по SSH и выполните:</p>
+  <pre>cd /var/www/site &amp;&amp; pwd</pre>
+  <p>Вывод (например <code>/var/www/site</code>) — подставьте в параметр пути при создании задачи.</p>
+
+  <h3>2.2. Ручной запуск</h3>
+  <p><strong>Задача → Запустить сейчас (ручной тест)</strong></p>
+  <figure class="shot">
+    <img src="screenshots/client-7.jpg" alt="Run now">
+  </figure>
+  <pre>C:\backup\client\data\backups\bash02\
+  backup_....zip</pre>
+
+  <h3>2.3. Планировщик 24/7</h3>
+  <p><strong>Запустить планировщик</strong> или <code>backup-client.exe serve</code></p>
+  <figure class="shot">
+    <img src="screenshots/client-9.jpg" alt="Планировщик">
+    <figcaption>Главное меню → Запустить планировщик</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/client-12.jpg" alt="Scheduler running">
+    <figcaption>Планировщик работает</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/client-11-result.jpg" alt="Результат бэкапа">
+    <figcaption>Файл в data\backups\</figcaption>
+  </figure>
+
+  <h3>2.4. Автозапуск Windows</h3>
+  <p><strong>Win+R</strong> → <code>taskschd.msc</code> → Создать задачу:</p>
+  <ul>
+    <li>Программа: <code>C:\backup\client\backup-client.exe</code></li>
+    <li>Аргументы: <code>serve</code></li>
+    <li>Рабочая папка: <code>C:\backup\client</code></li>
+    <li>Триггер: при запуске или при входе</li>
+  </ul>
+  <p>Проще (только после логина): <code>shell:startup</code> → ярлык с <code>serve</code>.</p>
+  <pre>Get-Content C:\backup\client\data\backup.log -Wait -Tail 30</pre>
+</section>
+
+<section id="part3">
+  <h2>Часть 3. Продакшн и шифрование</h2>
+
+  <h3>3.1. Режим секретов: Продакшн</h3>
+  <p>Когда всё работает: в меню подключения переключи <strong>Режим секретов: Продакшн</strong>, затем <strong>Проверить подключение</strong>.</p>
+  <p>Пароли dump-задач уходят с клиента, остаются на сервере.</p> 
+  <h3>3.2. Шифрование (Encrypt mode)</h3>
+  <div class="note">
+    <strong>Как устроен пароль шифрования</strong>
+    <p style="margin:0.5rem 0 0">
+      У <strong>каждого подключения</strong> (каждого VPS) может быть свой <code>encrypt_password</code> в
+      <code>config.toml</code> на сервере. Клиент только включает <strong>Шифрование (Вкл.)</strong> на задаче —
+      сам пароль на backup-PC не хранится.
+    </p>
+    <p style="margin:0.5rem 0 0">
+      Пароль знают только <strong>backup-server</strong> (шифрует архив перед отправкой) и тот, кто его задал.
+      Можно придумать свой passphrase или сгенерировать случайный в <strong>backup-decrypt</strong> и скопировать
+      то же значение на сервер.
+    </p>
+  </div>
+  <p><code>backup-decrypt.exe</code> (меню на английском) → <strong>List connections</strong> → <strong>Add connection</strong> → имя <code>bash02</code> (как slug) → программа покажет пароль.</p>
+  <figure class="shot">
+    <img src="screenshots/decrypt-1.jpg" alt="decrypt — List connections">
+    <figcaption>backup-decrypt: Add connection</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/decrypt-2.jpg" alt="Сгенерированный пароль">
+    <figcaption>Скопируй пароль на сервер</figcaption>
+  </figure>
+  <p>На VPS в <code>/opt/backup/config.toml</code>:</p>
+  <pre>encrypt_password = "тот_же_пароль"</pre>
+  <p>Перезапуск: <code>sudo systemctl restart backup-server</code></p>
+  <p>В backup-client: <strong>Задачи → … → Шифрование (Вкл.)</strong> — на диске будут <code>*.zip.aes</code>, не открытый zip.</p>
+  <figure class="shot">
+    <img src="screenshots/decrypt-3.jpg" alt="Расшифровка">
+    <figcaption>Browse .aes files — в Settings укажи root = data\backups</figcaption>
+  </figure>
+  <div class="note note-warn">
+    <strong>decrypt.toml</strong> с паролями — на USB, не на неттопе с планировщиком.
+  </div>
+</section>
+
+<section id="part4">
+  <h2>Мониторинг</h2>
+  <ul>
+    <li>Файлы в <code>data\backups\bash02\</code></li>
+    <li>Лог клиента без ERROR/WARN</li>
+    <li><code>backup-monitor.exe</code> — статус задач</li>
+  </ul>
+  <figure class="shot">
+    <img src="screenshots/monitor-1.jpg" alt="Монитор">
+  </figure>
+</section>
+
+<section id="pitfalls">
+  <h2>Грабли</h2>
+  <table>
+    <thead><tr><th>Проблема</th><th>Решение</th></tr></thead>
+    <tbody>
+      <tr><td>FileZilla / битый бинарник</td><td>WinSCP Binary, FAR, scp; <code>file backup-server</code></td></tr>
+      <tr><td>device_id / другой ПК</td><td><code>device_id = ""</code> на сервере, restart</td></tr>
+      <tr><td>mysqldump not found</td><td><code>which mysqldump</code> → config.toml на сервере</td></tr>
+      <tr><td>Encrypt skip</td><td>Пустой encrypt_password на сервере</td></tr>
+      <tr><td>Нет файла на клиенте</td><td>Запущен ли serve / Task Scheduler?</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Backup System v1.0.0 · Черновик гайда · <a href="https://github.com/geniden/backup">github.com/geniden/backup</a></p>
+  <p>На GitHub: <a href="TUTORIAL.ru.md">TUTORIAL.ru.md</a> · Офлайн: <code>docs/tutorial.ru.html</code></p>
+</footer>
+
+</div>
+</body>
+</html>

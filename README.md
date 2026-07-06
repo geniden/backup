@@ -10,8 +10,18 @@ A central **backup-client** schedules tasks over encrypted WSS, downloads archiv
 **Author:** Emelyanov Anton · [geniden@gmail.com](mailto:geniden@gmail.com) · [github.com/geniden/backup](https://github.com/geniden/backup)  
 **License:** [MIT](LICENSE) · **Version:** 1.0.0
 
-> **Official pre-built binaries:** download from [GitHub Releases](https://github.com/geniden/backup/releases).  
-> You may also **build from source** for your own OS (e.g. macOS or a specific Linux) — see [Build from source](#build-from-source).
+---
+
+## Get started
+
+1. **Download** pre-built binaries from **[GitHub Releases](https://github.com/geniden/backup/releases)**  
+   (`backup-client` + optional `backup-monitor` on your PC; `backup-server` on each VPS; `backup-decrypt` on USB if you use encryption).
+
+2. **Follow the step-by-step guide** (screenshots, tasks, scheduler, encryption):  
+   **[Setup guide (English)](docs/TUTORIAL.en.md)** · **[Инструкция (русский)](docs/TUTORIAL.ru.md)**  
+   Readable directly on GitHub. Offline HTML copies: [EN](docs/tutorial.en.html) · [RU](docs/tutorial.ru.html).
+
+3. **Need every setting explained?** See the **[User Manual](client/docs/manual.html)** (full reference; clone and open in a browser).
 
 ---
 
@@ -24,75 +34,20 @@ A central **backup-client** schedules tasks over encrypted WSS, downloads archiv
 | **backup-server** | Task queue and execution on each VPS |
 | **backup-decrypt** | Decrypt `*.aes` archives; keep passwords on USB, off the backup PC |
 
-Full documentation: **[User Manual](client/docs/manual.html)** · **[PAGE.md](PAGE.md)** (quick start)
-
 Per-component notes: [client/README.txt](client/README.txt) · [server/README.txt](server/README.txt) · [decrypt/README.txt](decrypt/README.txt)
 
 ---
 
-## Quick start (overview)
+## Documentation map
 
-1. Install **backup-client** (+ optional **backup-monitor**) on your backup machine.
-2. Add a connection → client generates TLS bundle under `data/ca/{slug}/`.
-3. Deploy **backup-server** + bundle to each VPS.
-4. Add tasks, enable encryption if needed, start `backup-client serve`.
-5. Optionally keep **backup-decrypt** + `decrypt.toml` on a USB stick.
-
-Details: [manual — deployment](client/docs/manual.html#deployment).
-
----
-
-## Build from source
-
-Requires **[Rust 1.70+](https://rust.rust-lang.org/)** (latest stable recommended). Crates use language edition 2021 (standard; not a calendar year).
-
-Windows: run **`build-all.ps1`** in the repo root → binaries in **`dist/win64/`** (see script). Or manually:
-
-```powershell
-cd client
-cargo build --release
-# → target\release\backup-client.exe, backup-monitor.exe
-
-cd ..\server
-cargo build --release
-# → target\release\backup-server.exe
-
-cd ..\decrypt
-cargo build --release
-# → target\release\backup-decrypt.exe
-```
-
-### Linux (musl, portable static binaries)
-
-From **WSL**, one command (adjust the repo path to your clone):
-
-```bash
-chmod +x /path/to/backup/build-all.sh
-/path/to/backup/build-all.sh -f
-```
-
-Or per crate:
-
-```bash
-cd ~/backup-client-wsl && /path/to/backup/client/build.sh -f
-cd ~/backup-server-wsl && /path/to/backup/server/build.sh -f
-cd ~/backup-decrypt-wsl && /path/to/backup/decrypt/build.sh -f
-```
-
-Check version: `backup-client --version`, `backup-server` banner, etc.
-
----
-
-## Repository layout
-
-```
-client/     backup-client, backup-monitor, manual, locales
-server/     backup-server agent
-decrypt/    offline decrypt tool (backup-decrypt)
-LICENSE     MIT
-```
-
-Each app is a separate Rust crate with its own `Cargo.toml`. First run creates local data (`backup.db`, `data/` on client; `config.toml`, `backup.db` on server) — these are **not** part of the repository.
+| Document | Purpose |
+|----------|---------|
+| **[docs/TUTORIAL.en.md](docs/TUTORIAL.en.md)** | **Main onboarding (EN)** — read on GitHub |
+| **[docs/TUTORIAL.ru.md](docs/TUTORIAL.ru.md)** | Same guide in Russian |
+| [docs/tutorial.en.html](docs/tutorial.en.html) · [docs/tutorial.ru.html](docs/tutorial.ru.html) | Offline HTML (open in browser after clone) |
+| **[client/docs/manual.html](client/docs/manual.html)** | **Full reference** — all menus, fields, security layers |
+| **[PAGE.md](PAGE.md)** | Short markdown overview (security layers, quick checklist) |
+| **[BUILD.md](BUILD.md)** | Build from source (developers) |
 
 ---
 
@@ -113,9 +68,3 @@ The author is **not responsible** for loss, corruption, leakage, unauthorized ac
 **Data security is the responsibility of the person who deploys and operates the software.**
 
 Expanded text: [manual — License & disclaimer](client/docs/manual.html#license).
-
----
-
-## Publishing releases (maintainers)
-
-See [docs/RELEASE.md](docs/RELEASE.md) for building zip/tar.gz assets and creating a GitHub Release.

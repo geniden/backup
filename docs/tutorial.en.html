@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backup System — step-by-step setup</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --border: #30363d;
+      --warn-bg: #2d2a1f;
+      --warn-border: #d29922;
+      --good-bg: #1a2e1f;
+      --good-border: #3fb950;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      margin: 0;
+    }
+    .wrap { max-width: 52rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 { font-size: 1.75rem; margin: 0 0 0.5rem; color: #fff; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; }
+    .meta-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .meta-badges span {
+      font-size: 0.82rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.25rem 0.6rem;
+      color: var(--accent);
+    }
+    nav.toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    nav.toc h2 { font-size: 1rem; margin: 0 0 0.75rem; color: var(--accent); }
+    nav.toc ol { margin: 0; padding-left: 1.25rem; }
+    nav.toc li { margin: 0.35rem 0; }
+    nav.toc a { color: var(--accent); text-decoration: none; }
+    nav.toc a:hover { text-decoration: underline; }
+    section { margin-bottom: 2.5rem; }
+    h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-top: 2rem;
+    }
+    h3 { font-size: 1.1rem; color: var(--accent); margin-top: 1.5rem; }
+    h4 { font-size: 1rem; margin-top: 1.25rem; color: #fff; }
+    p { margin: 0.75rem 0; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+    li { margin: 0.35rem 0; }
+    code, pre {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.88rem;
+    }
+    code {
+      background: var(--surface);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      line-height: 1.45;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--surface); color: var(--accent); }
+    .note {
+      background: var(--good-bg);
+      border-left: 4px solid var(--good-border);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+    .note-warn {
+      background: var(--warn-bg);
+      border-left-color: var(--warn-border);
+    }
+    .note strong { color: #fff; }
+    figure.shot { margin: 1.25rem 0; padding: 0; }
+    figure.shot img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    figure.shot figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .lang-switch { margin-top: 0.75rem; font-size: 0.9rem; }
+    .lang-switch a { color: var(--accent); margin-right: 1rem; }
+    .shield-levels {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: lvl;
+    }
+    .shield-levels li {
+      counter-increment: lvl;
+      position: relative;
+      padding: 0.55rem 0 0.55rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.93rem;
+    }
+    .shield-levels li:last-child { border-bottom: none; }
+    .shield-levels li::before {
+      content: counter(lvl);
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 1.65rem;
+      height: 1.65rem;
+      line-height: 1.65rem;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(63, 185, 80, 0.12);
+      border: 1px solid rgba(63, 185, 80, 0.35);
+      border-radius: 50%;
+    }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Backup System — setup in one evening</h1>
+  <p class="subtitle">Friendly walkthrough: mini PC + VPS + first backup · v1.0.0</p>
+  <div class="meta-badges">
+    <span>~15 min to first backup</span>
+    <span>Windows client</span>
+    <span>Linux server</span>
+    <span>optional USB decrypt</span>
+  </div>
+  <p class="subtitle" style="margin-top:1rem">
+    Full reference: <a href="../client/docs/manual.html">manual.html</a> ·
+    <a href="../PAGE.md">PAGE.md</a> ·
+    <a href="https://github.com/geniden/backup/releases">Releases</a>
+  </p>
+  <p class="lang-switch"><a href="TUTORIAL.ru.md">Русский (Markdown, GitHub)</a> · <a href="tutorial.ru.html">Русский (HTML, offline)</a></p>
+</header>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#intro">Why I do it this way</a></li>
+    <li><a href="#hardware">Mini PC &amp; downloads</a></li>
+    <li><a href="#part1">Part 1 — client &amp; server</a></li>
+    <li><a href="#part2">Part 2 — tasks &amp; scheduler</a></li>
+    <li><a href="#part3">Part 3 — production &amp; encryption</a></li>
+    <li><a href="#part4">Monitoring</a></li>
+    <li><a href="#pitfalls">Troubleshooting</a></li>
+  </ol>
+</nav>
+
+<section id="intro">
+  <h2>Why I do it this way</h2>
+  <p>
+    I run backups for small business sites — SaaS and shops. Full disk images are too heavy;
+    a MySQL dump plus a folder archive is usually enough.
+  </p>
+  <p>
+    You <em>can</em> run backup-client on a VPS, but I keep archives on a <strong>dedicated machine</strong> at home.
+  </p>
+  <ul>
+    <li>Backups on a quiet mini PC (~35 W)</li>
+    <li>Own <code>device_id</code> on the backup PC</li>
+    <li>In Production secrets mode, DB passwords stay on the server</li>
+    <li>AES archives + decrypt keys on a USB stick</li>
+  </ul>
+  <p>This guide is not the full manual — every field has hints in the apps. Here we cover the happy path and what the menus look like.</p>
+
+  <h3>Five protection layers</h3>
+  <ol class="shield-levels">
+    <li><strong>TLS</strong> <span class="level-note">Private CA, WSS + HTTPS</span></li>
+    <li><strong>Encrypt mode</strong> <span class="level-note">AES on server → <code>*.aes</code> on disk</span></li>
+    <li><strong>device_id</strong> <span class="level-note">Server accepts only your backup PC</span></li>
+    <li><strong>Secrets: Production</strong> <span class="level-note">DB passwords on backup-server only</span></li>
+    <li><strong>backup-decrypt on USB</strong> <span class="level-note">Decrypt passwords off the scheduler PC</span></li>
+  </ol>
+</section>
+
+<section id="hardware">
+  <h2>Mini PC &amp; downloads</h2>
+  <h3>Hardware</h3>
+  <p><strong>HP ProDesk 260 G2</strong> (used, ~$50–75): i3-6100, 16 GB RAM, SSD 256 GB, silent, ~35 W.</p>
+  <figure class="shot">
+    <img src="screenshots/mini-pc.jpg" alt="Mini PC" width="800">
+    <figcaption>24/7 backup-client on a shelf</figcaption>
+  </figure>
+
+  <h3>Download</h3>
+  <p><a href="https://github.com/geniden/backup/releases">GitHub Releases</a>:</p>
+  <ul>
+    <li>Mini PC (Windows): <code>backup-client-1.0.0-windows-x64.zip</code></li>
+    <li>VPS (Linux): <code>backup-server-1.0.0-linux-x64-musl.tar.gz</code></li>
+    <li>USB (optional): <code>backup-decrypt-1.0.0-windows-x64.zip</code></li>
+  </ul>
+  <p>Unpack under <code>C:\backup\</code>:</p>
+  <figure class="shot">
+    <img src="screenshots/client-0.jpg" alt="Folder layout">
+    <figcaption>C:\backup\ layout</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/client-1.jpg" alt="backup-client">
+    <figcaption>backup-client.exe</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/monitor-1.jpg" alt="backup-monitor">
+    <figcaption>backup-monitor (optional)</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/server-2.jpg" alt="backup-server on VPS">
+    <figcaption>backup-server on Linux VPS</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/decrypt-1.jpg" alt="backup-decrypt">
+    <figcaption>backup-decrypt on USB</figcaption>
+  </figure>
+</section>
+
+<section id="part1">
+  <h2>Part 1. Client &amp; server</h2>
+
+  <h3>1.1. First launch</h3>
+  <p>Run <code>C:\backup\client\backup-client.exe</code></p>
+  <p>Main menu → <strong>Settings</strong> → <strong>Language</strong> (English, Deutsch, Français, Русский, 中文).</p>
+
+  <h3>1.2. Add connection</h3>
+  <p><strong>Connections</strong> → <strong>Add connection</strong></p>
+  <p>On <strong>Test connection now?</strong> press <strong>n</strong> — the server is not up yet.</p>
+  <figure class="shot">
+    <img src="screenshots/client-3.jpg" alt="Add connection">
+    <figcaption>Connection ID (slug) and host:port</figcaption>
+  </figure>
+  <pre>C:\backup\client\data\ca\bash02\
+├── config.toml
+├── tls\
+├── service.sh
+└── README.txt</pre>
+  <div class="note">
+    <strong>TLS</strong> — your private CA. Folder <code>data\ca\bash02\</code> is the full deploy bundle for the VPS.
+  </div>
+
+  <h3>1.3. Copy to VPS</h3>
+  <div class="note note-warn">
+    <strong>FileZilla warning:</strong> in my experience it sometimes <strong>corrupts</strong> the Linux binary
+    (<code>Exec format error</code>). Prefer <strong>WinSCP (Binary)</strong>, <strong>FAR + SFTP</strong>, or <strong>scp</strong>.
+    After copy: <code>file backup-server</code> → <code>ELF 64-bit … statically linked</code>.
+  </div>
+  <pre>mkdir -p /opt/backup</pre>
+  <pre>scp -r C:\backup\client\data\ca\bash02\* user@203.0.113.10:/opt/backup/
+scp C:\backup\server\backup-server user@203.0.113.10:/opt/backup/</pre>
+  <figure class="shot">
+    <img src="screenshots/server-1.jpg" alt="/opt/backup">
+    <figcaption>Expected contents of /opt/backup/</figcaption>
+  </figure>
+
+  <h3>1.4. Start on VPS</h3>
+  <pre>cd /opt/backup
+chmod +x backup-server service.sh
+./backup-server</pre>
+  <p><code>chmod 600 tls/server.key</code> is usually <strong>not required</strong> — backup-server and <code>service.sh</code> set it automatically. Use manually only if the server complains about key permissions.</p>
+  <figure class="shot">
+    <img src="screenshots/server-2.jpg" alt="Server running">
+    <figcaption>Trial run or systemctl status</figcaption>
+  </figure>
+  <pre>sudo ./service.sh
+sudo systemctl status backup-server</pre>
+
+  <h4>systemctl cheat sheet</h4>
+  <table>
+    <thead><tr><th>Command</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><code>sudo systemctl start backup-server</code></td><td>Start</td></tr>
+      <tr><td><code>sudo systemctl stop backup-server</code></td><td>Stop</td></tr>
+      <tr><td><code>sudo systemctl restart backup-server</code></td><td>After editing config.toml</td></tr>
+      <tr><td><code>sudo systemctl enable backup-server</code></td><td>Start on boot</td></tr>
+      <tr><td><code>sudo journalctl -u backup-server -f</code></td><td>Live logs</td></tr>
+    </tbody>
+  </table>
+  <pre>free -h
+df -h
+uptime</pre>
+
+  <h3>1.5. Test from client</h3>
+  <p><strong>Connections</strong> → <code>bash02</code> → <strong>Test connection</strong></p>
+  <p>On first success the server stores this PC’s <code>device_id</code> in <code>config.toml</code>.</p>
+  <figure class="shot">
+    <img src="screenshots/client-6.jpg" alt="Connection OK">
+    <figcaption>Connection OK — TLS + device_id registered</figcaption>
+  </figure>
+  <p>Move to a new PC: clear <code>device_id = ""</code> on the server → <code>systemctl restart backup-server</code> → <strong>Test connection</strong> from the new machine.</p>
+</section>
+
+<section id="part2">
+  <h2>Part 2. Tasks &amp; scheduler</h2>
+
+  <h3>2.1. Add task</h3>
+  <p><strong>Connections</strong> → <code>bash02</code> → <strong>Add task</strong></p>
+  <p>Task setup is the core of the system: type, parameters, and <strong>schedule</strong> define what is copied
+  from the VPS and when. Everything else (scheduler, encryption) builds on tasks you create here.</p>
+  <figure class="shot">
+    <img src="screenshots/client-4.jpg" alt="Tasks menu">
+  </figure>
+  <table>
+    <thead><tr><th>Type</th><th>Use when</th></tr></thead>
+    <tbody>
+      <tr><td>mysql_dump</td><td>MySQL / MariaDB</td></tr>
+      <tr><td>postgresql_dump</td><td>PostgreSQL</td></tr>
+      <tr><td>files_archive</td><td>Site folder, configs</td></tr>
+      <tr><td>sqlite_dump</td><td>SQLite file</td></tr>
+      <tr><td>shell</td><td>Script in data/scripts/</td></tr>
+      <tr><td>dir_sync</td><td>Incremental sync (no AES)</td></tr>
+    </tbody>
+  </table>
+  <figure class="shot">
+    <img src="screenshots/client-5.jpg" alt="Task parameters">
+    <figcaption>Task name, schedule, DB or path settings</figcaption>
+  </figure>
+
+  <h4>Schedule (cron)</h4>
+  <p>When prompted, the client shows field help. After you confirm, you see the full expression, e.g.
+  <code>→ saved as: 0 8 * * *</code>.</p>
+  <p>The format has <strong>5 fields</strong>: minute · hour · day-of-month · month · day-of-week.
+  You do <strong>not</strong> have to type asterisks <code>*</code> (“every”) — missing fields are filled in automatically.
+  A value like <code>/N</code> is treated as <code>*/N</code> (every N in that field).</p>
+
+  <table>
+    <thead><tr><th>What you type</th><th>Saved as</th><th>When it runs</th></tr></thead>
+    <tbody>
+      <tr><td><code>*/5</code></td><td><code>*/5 * * * *</code></td><td>every 5 minutes (for testing)</td></tr>
+      <tr><td><code>0 8</code></td><td><code>0 8 * * *</code></td><td>daily at 08:00</td></tr>
+      <tr><td><code>0 2</code></td><td><code>0 2 * * *</code></td><td>daily at 02:00</td></tr>
+      <tr><td><code>0 /2</code></td><td><code>0 */2 * * *</code></td><td>every 2 hours (at :00)</td></tr>
+      <tr><td><code>*/60</code> or <code>/60</code></td><td><code>0 * * * *</code></td><td>every hour</td></tr>
+      <tr><td><code>*/120</code></td><td><code>0 */2 * * *</code></td><td>every 2 hours</td></tr>
+      <tr><td><code>*/30 * * * *</code></td><td>—</td><td>every 30 minutes</td></tr>
+      <tr><td><code>0 0 * * 0</code></td><td>—</td><td>every Sunday at midnight</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note note-warn">
+    <strong>Many tasks at the same time</strong>
+    <p style="margin:0.5rem 0 0">If several tasks (5–10 or more) start in the <strong>same minute</strong>,
+    the server may not queue them all in time — some runs are <strong>SKIPPED</strong>
+    (log: “SKIPPED this run: not queued after … attempts”).</p>
+    <p style="margin:0.5rem 0 0">Stagger tasks by <strong>at least one minute</strong>: first at minute <code>0</code>,
+    second at <code>1</code>, third at <code>2</code>… Or use 5-minute steps: <code>0</code>, <code>5</code>, <code>10</code>
+    in the same hour.</p>
+    <p style="margin:0.5rem 0 0">Example for three DB dumps in the morning: <code>0 8 * * *</code>,
+    <code>1 8 * * *</code>, <code>2 8 * * *</code>.</p>
+  </div>
+
+  <h4>Folder paths on the VPS</h4>
+  <p>Only <strong>files_archive</strong> and <strong>dir_sync</strong> read files on the server directly —
+  the task needs an <strong>absolute path</strong> to a directory. Other types (DB dumps, sqlite, shell)
+  use their own fields (DB host, script path, etc.).</p>
+  <p>To get the path on the VPS for a folder, SSH in and run:</p>
+  <pre>cd /var/www/site &amp;&amp; pwd</pre>
+  <p>Use the output (e.g. <code>/var/www/site</code>) in the path field when creating the task.</p>
+
+  <h3>2.2. Run now</h3>
+  <p>Open the task → <strong>Run now (manual test)</strong></p>
+  <figure class="shot">
+    <img src="screenshots/client-7.jpg" alt="Run now">
+  </figure>
+  <pre>C:\backup\client\data\backups\bash02\
+  backup_....zip</pre>
+
+  <h3>2.3. Scheduler 24/7</h3>
+  <p>Main menu → <strong>Start scheduler</strong> or <code>backup-client.exe serve</code></p>
+  <figure class="shot">
+    <img src="screenshots/client-9.jpg" alt="Start scheduler">
+    <figcaption>Main menu → Start scheduler</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/client-12.jpg" alt="Scheduler running">
+    <figcaption>Scheduler running</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/client-11-result.jpg" alt="Backup file">
+    <figcaption>File in data\backups\</figcaption>
+  </figure>
+
+  <h3>2.4. Windows autostart</h3>
+  <p><strong>Win+R</strong> → <code>taskschd.msc</code> → Create Task:</p>
+  <ul>
+    <li>Program: <code>C:\backup\client\backup-client.exe</code></li>
+    <li>Arguments: <code>serve</code></li>
+    <li>Start in: <code>C:\backup\client</code></li>
+    <li>Trigger: At startup or At log on</li>
+  </ul>
+  <p>Simpler (after logon only): <code>shell:startup</code> → shortcut with <code>serve</code>.</p>
+  <pre>Get-Content C:\backup\client\data\backup.log -Wait -Tail 30</pre>
+</section>
+
+<section id="part3">
+  <h2>Part 3. Production &amp; encryption</h2>
+
+  <h3>3.1. Secrets mode: Production</h3>
+  <p>When everything works: connection menu → switch <strong>Secrets mode: Production (passwords on server)</strong>, then <strong>Test connection</strong>.</p>
+  <h3>3.2. Encrypt mode</h3>
+  <div class="note">
+    <strong>How encrypt_password works</strong>
+    <p style="margin:0.5rem 0 0">
+      Each <strong>connection</strong> (each VPS) can have its own <code>encrypt_password</code> in that server’s
+      <code>config.toml</code>. backup-client only toggles <strong>Encrypt mode (on)</strong> per task — the password is
+      <em>not</em> stored on the backup PC.
+    </p>
+    <p style="margin:0.5rem 0 0">
+      Only <strong>backup-server</strong> (encrypts before download) and whoever created the password know it.
+      You can choose your own passphrase or generate a random one in <strong>backup-decrypt</strong> and paste the same
+      value into the server config.
+    </p>
+  </div>
+  <p><code>backup-decrypt.exe</code> → <strong>List connections</strong> → <strong>Add connection</strong> → name <code>bash02</code> (same slug) → copy the shown password.</p>
+  <figure class="shot">
+    <img src="screenshots/decrypt-1.jpg" alt="List connections">
+    <figcaption>backup-decrypt: Add connection</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="screenshots/decrypt-2.jpg" alt="Generated password">
+    <figcaption>Copy password to the server</figcaption>
+  </figure>
+  <p>On VPS <code>/opt/backup/config.toml</code>:</p>
+  <pre>encrypt_password = "same_password_here"</pre>
+  <p><code>sudo systemctl restart backup-server</code></p>
+  <p>In backup-client: task menu → <strong>Encrypt mode (on)</strong> → downloads are <code>*.zip.aes</code>.</p>
+  <figure class="shot">
+    <img src="screenshots/decrypt-3.jpg" alt="Browse aes">
+    <figcaption>Browse .aes files — set backups root in Settings</figcaption>
+  </figure>
+  <div class="note note-warn">
+    Keep <strong>decrypt.toml</strong> on USB, not on the same mini PC as the scheduler.
+  </div>
+</section>
+
+<section id="part4">
+  <h2>Monitoring</h2>
+  <ul>
+    <li>Files under <code>data\backups\bash02\</code></li>
+    <li>Client log without ERROR/WARN</li>
+    <li><code>backup-monitor.exe</code> for a live dashboard</li>
+  </ul>
+  <figure class="shot">
+    <img src="screenshots/monitor-1.jpg" alt="Monitor">
+  </figure>
+</section>
+
+<section id="pitfalls">
+  <h2>Troubleshooting</h2>
+  <table>
+    <thead><tr><th>Issue</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Corrupted binary / FileZilla</td><td>WinSCP Binary, FAR, scp; <code>file backup-server</code></td></tr>
+      <tr><td>device_id / wrong PC</td><td><code>device_id = ""</code> on server, restart</td></tr>
+      <tr><td>mysqldump not found</td><td><code>which mysqldump</code> → server config.toml</td></tr>
+      <tr><td>Encrypt task skipped</td><td>Empty encrypt_password on server</td></tr>
+      <tr><td>No file on client</td><td>Is <code>serve</code> / Task Scheduler running?</td></tr>
+    </tbody>
+  </table>
+  <p>Details: <a href="../client/docs/manual.html">manual.html</a></p>
+</section>
+
+<footer>
+  <p>Backup System v1.0.0 · <a href="https://github.com/geniden/backup">github.com/geniden/backup</a></p>
+  <p>On GitHub: <a href="TUTORIAL.en.md">TUTORIAL.en.md</a> · Offline: <code>docs/tutorial.en.html</code></p>
+</footer>
+
+</div>
+</body>
+</html>
